@@ -1,0 +1,22 @@
+[
+    {
+        "name": "PS5",
+        "price": 100
+    },
+    {
+        "name": "Xbox One X",
+        "price": 100
+    },
+    {
+        "name": "Nintendo Switch",
+        "price": 100
+    },
+    {
+        "name": "PS4",
+        "price": 100
+    },
+    {
+        "name": "Xbox One",
+        "price": 100
+    }
+]

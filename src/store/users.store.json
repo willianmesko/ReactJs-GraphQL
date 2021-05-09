@@ -1,0 +1,107 @@
+[
+    {
+        "id": 1,
+        "name": "User",
+        "email": "user@gmail.com",
+        "password": "123456",
+        "favorites": [
+            {
+                "id": 1,
+                "name": "Tv Full hd",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_601136-MLA43553973898_092020-F.webp",
+                "attributes": {
+                    "inch": 47,
+                    "resolution": "4K"
+                }
+            },
+            {
+                "id": 2,
+                "name": "Câmera GoPro Hero7 4K",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_854402-MLA45630607615_042021-O.webp",
+                "attributes": {
+                    "color": "black",
+                    "memory": "128gb"
+                }
+            },
+            {
+                "id": 10,
+                "name": "Tv Full hd",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_601136-MLA43553973898_092020-F.webp",
+                "attributes": {
+                    "inch": 47,
+                    "resolution": "4K"
+                }
+            },
+            {
+                "id": 20,
+                "name": "Câmera GoPro Hero7 4K",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_854402-MLA45630607615_042021-O.webp",
+                "attributes": {
+                    "color": "black",
+                    "memory": "128gb"
+                }
+            },
+            {
+                "id": 40,
+                "name": "Tv Full hd",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_601136-MLA43553973898_092020-F.webp",
+                "attributes": {
+                    "inch": 47,
+                    "resolution": "4K"
+                }
+            },
+            {
+                "id": 30,
+                "name": "Câmera GoPro Hero7 4K",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_854402-MLA45630607615_042021-O.webp",
+                "attributes": {
+                    "color": "black",
+                    "memory": "128gb"
+                }
+            },
+            {
+                "id": 1,
+                "name": "Tv Full hd",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_601136-MLA43553973898_092020-F.webp",
+                "attributes": {
+                    "inch": 47,
+                    "resolution": "4K"
+                }
+            },
+            {
+                "id": 2,
+                "name": "Câmera GoPro Hero7 4K",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_854402-MLA45630607615_042021-O.webp",
+                "attributes": {
+                    "color": "black",
+                    "memory": "128gb"
+                }
+            },
+            {
+                "id": 10,
+                "name": "Tv Full hd",
+                "price": 200,
+                "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_601136-MLA43553973898_092020-F.webp",
+                "attributes": {
+                    "inch": 47,
+                    "resolution": "4K"
+                }
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Admin",
+        "email": "admin@gmail.com",
+        "password": "654321",
+        "favorites": []
+    }
+]
