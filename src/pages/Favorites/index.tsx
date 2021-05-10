@@ -29,20 +29,22 @@ export default function Favorites() {
     return `${type.toUpperCase()} ${value.toUpperCase()}`
   }
   async function searchFavorites() {
-    setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setLoading(true)
     setFiltredProducts(orderData(favorites?.products, configs?.favoritesOrder))
 
 
     setFiltredProducts(filterData(favorites?.products, configs?.favoritesQueryFilter))
-    setLoading(false)
 
+    setLoading(false)
   }
 
 
   useEffect(() => {
+
     searchFavorites();
+
 
   }, [configs?.favoritesQueryFilter, configs?.favoritesOrder, configs?.favoritesCurrentPage, favorites]);
 

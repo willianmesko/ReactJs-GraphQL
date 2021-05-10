@@ -24,7 +24,7 @@ export default function SignUp() {
     });
 
     const { signUp } = useApp();
-    const history = useHistory();
+
 
     const handleSingUp: SubmitHandler<SignUpFormData> = async ({
         name,

@@ -9,7 +9,6 @@ import {
   Icon,
   IconButton,
   Skeleton,
-  Text,
   Select,
 } from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
@@ -58,7 +57,9 @@ export default function Products() {
     setLoading(false);
   }
   useEffect(() => {
+
     getProducts();
+
   }, [configs?.productCurrentPage, configs?.productsQueryFilter, configs?.productsOrder]);
 
   return (

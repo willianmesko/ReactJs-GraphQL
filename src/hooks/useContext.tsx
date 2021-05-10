@@ -113,9 +113,7 @@ const AuthProvider: React.FC = ({ children }) => {
     const { favorites } = data;
 
     let updatedFavorites = favorites;
-    product.attributes.map(attribute => {
-      updatedFavorites.filters.filter(filter => filter.name !== attribute.type)
-    })
+
 
     updatedFavorites.products = updatedFavorites.products.filter(
       (favoriteProduct) => favoriteProduct.id !== product.id
