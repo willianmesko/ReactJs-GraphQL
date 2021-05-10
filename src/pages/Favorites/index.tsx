@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Flex, Select, IconButton, Icon, Skeleton, Stack, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Select,
+  IconButton,
+  Icon,
+  Skeleton,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import { IoFilterSharp } from 'react-icons/io5';
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
@@ -12,45 +20,41 @@ import { Product } from '../../interfaces/Product.interface';
 import { FavoriteItem } from '../../components/FavoriteItem';
 
 export default function Favorites() {
-  const {
-    favorites,
-    configs,
-    setConfigs
-  } = useApp();
-  const [filtredProducts, setFiltredProducts] = useState<Product[]>(favorites.products);
+  const { favorites, configs, setConfigs } = useApp();
+  const [filtredProducts, setFiltredProducts] = useState<Product[]>(
+    favorites.products,
+  );
   const [isLoading, setLoading] = useState(false);
   const { onOpen } = useSidebarDrawer();
-  const [totalCountOfRegister] = useState<number>(
-    filtredProducts?.length
-  );
+  const [totalCountOfRegister] = useState<number>(filtredProducts?.length);
 
   const filtredByLabel = (queryFilter: string) => {
     const [type, value] = queryFilter.split('?');
-    return `${type.toUpperCase()} ${value.toUpperCase()}`
-  }
+    return `${type.toUpperCase()} ${value.toUpperCase()}`;
+  };
   async function searchFavorites() {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(true);
+    setFiltredProducts(orderData(favorites?.products, configs?.favoritesOrder));
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setLoading(true)
-    setFiltredProducts(orderData(favorites?.products, configs?.favoritesOrder))
+    setFiltredProducts(
+      filterData(favorites?.products, configs?.favoritesQueryFilter),
+    );
 
-
-    setFiltredProducts(filterData(favorites?.products, configs?.favoritesQueryFilter))
-
-    setLoading(false)
+    setLoading(false);
   }
-
 
   useEffect(() => {
-
     searchFavorites();
-
-
-  }, [configs?.favoritesQueryFilter, configs?.favoritesOrder, configs?.favoritesCurrentPage, favorites]);
+  }, [
+    configs?.favoritesQueryFilter,
+    configs?.favoritesOrder,
+    configs?.favoritesCurrentPage,
+    favorites,
+  ]);
 
   return (
     <>
-
       <Header />
 
       {favorites && favorites.products?.length > 0 && (
@@ -76,13 +80,18 @@ export default function Favorites() {
           alignSelf="flex-end"
           placeholder="Order by"
           value={configs?.favoritesOrder}
-          onChange={(e) => setConfigs({ ...configs, favoritesCurrentPage: 1, favoritesOrder: e.target.value })}
+          onChange={e =>
+            setConfigs({
+              ...configs,
+              favoritesCurrentPage: 1,
+              favoritesOrder: e.target.value,
+            })
+          }
         >
           <option value="lowerPrice">Lower price</option>
           <option value="higherPrice">Higher price</option>
         </Select>
         {isLoading && (
-
           <Stack>
             <Skeleton
               h="200px"
@@ -109,7 +118,6 @@ export default function Favorites() {
               borderRadius="lg"
             />
           </Stack>
-
         )}
         {!isLoading && (
           <>
@@ -117,7 +125,11 @@ export default function Favorites() {
               <h1>No favorite found</h1>
             ) : (
               <>
-                {configs?.favoritesQueryFilter && <Text fontWeight="bold" fontSize="3xl">{filtredByLabel(configs?.favoritesQueryFilter)}</Text>}
+                {configs?.favoritesQueryFilter && (
+                  <Text fontWeight="bold" fontSize="3xl">
+                    {filtredByLabel(configs?.favoritesQueryFilter)}
+                  </Text>
+                )}
 
                 <FavoriteItem
                   setFiltredProducts={setFiltredProducts}

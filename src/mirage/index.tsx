@@ -6,7 +6,7 @@ import usersData from '../store/users.store.json';
 import { paginationHelper } from '../utils/pagination';
 import { filterData } from '../utils/filter';
 import { orderData } from '../utils/order';
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 import { Filter } from '../interfaces/Filters.interface';
 
 export function makeServer() {
@@ -27,7 +27,7 @@ export function makeServer() {
           queryFilter,
           orderBy,
         } = request.queryParams;
-        let products: Product[] = []
+        let products: Product[] = [];
         let filters: Filter[] = [];
 
         switch (departament) {
@@ -54,45 +54,43 @@ export function makeServer() {
         const response = paginationHelper(
           products,
           Number(page),
-          Number(per_page)
+          Number(per_page),
         );
 
         return new Response(
           200,
           { 'x-total-count': String(total) },
-          { products: response, filters }
+          { products: response, filters },
         );
-
-      })
+      });
 
       this.post('/user', function (_, request) {
         const { name, email, password } = JSON.parse(request.requestBody);
         let user;
 
-        user = usersData.find(
-          (user) => user.email === email
-        );
-
+        user = usersData.find(user => user.email === email);
 
         if (user) {
           throw new Error('Account Already exists');
         }
 
         user = {
-          uuid: uuidv4(), name, email, password,
-        }
+          uuid: uuidv4(),
+          name,
+          email,
+          password,
+        };
 
         usersData.push(user);
 
         return new Response(200, {}, { user });
-      })
-
+      });
 
       this.post('/session', function (this: any, shema, request) {
         const { email, password } = JSON.parse(request.requestBody);
 
         const user = usersData.find(
-          (user) => user.email === email && user.password === password
+          user => user.email === email && user.password === password,
         );
 
         if (!user) {
@@ -101,9 +99,7 @@ export function makeServer() {
 
         return new Response(200, {}, { user });
       });
-
     },
-
   });
 
   return server;
