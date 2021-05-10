@@ -1,3 +1,4 @@
 export interface Attributes {
-    [key: string]: string | number;
+  type: string;
+  value: string;
 }

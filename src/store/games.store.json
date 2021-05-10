@@ -1,22 +1,123 @@
-[
+{"data": [
     {
-        "name": "PS5",
-        "price": 100
+        "id": 10,
+        "name": "Playstation 5",
+        "price": 10000,
+        "reviewCount": 20,
+        "rating": 5,
+        "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_807624-MLB45668578713_042021-F.webp",
+        "attributes": [
+            {
+                "type": "memory",
+                "value": "512Gb"
+            },
+            {
+                "type": "condition",
+                "value": "new"
+            }
+        ]
     },
     {
-        "name": "Xbox One X",
-        "price": 100
+        "id": 20,
+        "name": "Xbox series X",
+        "price": 18000,
+        "reviewCount": 50,
+        "rating": 3,
+        "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_794435-MLA45046407331_032021-F.webp",
+        "attributes": [
+            {
+                "type": "memory",
+                "value": "1Tb"
+            },
+            {
+                "type": "condition",
+                "value": "used"
+            }
+        ]
     },
     {
-        "name": "Nintendo Switch",
-        "price": 100
+        "id": 30,
+        "name": "Nintendo switch",
+        "price": 19000,
+        "reviewCount": 15,
+        "rating": 3,
+        "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_918635-MLB44210794368_112020-F.webp",
+        "attributes": [
+            {
+                "type": "memory",
+                "value": "128Gb"
+            },
+            {
+                "type": "condition",
+                "value": "used"
+            }
+        ]
     },
     {
-        "name": "PS4",
-        "price": 100
+        "id": 40,
+        "name": "Playstation 4",
+        "price": 23000,
+        "reviewCount": 151,
+        "rating": 5,
+        "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_739599-MLB45790176981_052021-F.webp",
+        "attributes": [
+            {
+                "type": "memory",
+                "value": "512Gb"
+            },
+            {
+                "type": "condition",
+                "value": "new"
+            }
+        ]
     },
     {
-        "name": "Xbox One",
-        "price": 100
+        "id": 50,
+        "name": "Xbox one",
+        "price": 300,
+        "reviewCount": 50,
+        "rating": 2,
+        "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_627914-MLA40655732617_022020-F.webp",
+        "attributes": [
+            {
+                "type": "memory",
+                "value": "1TB"
+            },
+            {
+                "type": "condition",
+                "value": "new"
+            }
+        ]
+    },
+    {
+        "id": 60,
+        "name": "Nintendo Wii U",
+        "price": 39000,
+        "reviewCount": 15,
+        "rating": 3,
+        "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/71oHatSEvBL._AC_SL1500_.jpg",
+        "attributes": [
+            {
+                "type": "memory",
+                "value": "512Gb"
+            },
+            {
+                "type": "condition",
+                "value": "used"
+            }
+        ]
     }
-]
+
+],
+"filters": [
+        {
+          "name": "Memory",
+          "options": ["128Gb", "256gGb", "512Gb", "1Tb"]
+        },
+        {
+          "name": "Condition",
+          "options": ["used", "new"]
+        }
+        
+      ]    
+}

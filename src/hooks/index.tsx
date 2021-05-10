@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { AuthProvider } from './useAuth';
-
+import { AuthProvider } from './useContext';
+import { SideBarDrawerProvider } from './sideBarDrawerContext';
 
 const AppProvider: React.FC = ({ children }) => (
   <AuthProvider>
-    {children}
-
+    <SideBarDrawerProvider>{children}</SideBarDrawerProvider>
   </AuthProvider>
 );
 

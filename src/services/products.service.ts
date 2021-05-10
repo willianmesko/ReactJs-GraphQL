@@ -1,27 +1,36 @@
-import { Product } from "../interfaces/Product.interface";
-import axios from "./api";
+import { Product } from '../interfaces/Product.interface';
+import axios from './api';
+
 interface GetProductsResponse {
-    data: Product[],
-    totalCount: number
+  products: Product[];
+  filters: any;
+  totalCount: number;
 }
 export const productsApi = {
+  getProducts: async (
+    department: string,
+    page: number,
+    queryFilter?: string,
+    orderBy?: string
+  ): Promise<GetProductsResponse> => {
+    try {
+      const { data, headers } = await axios.get(`${department}`, {
+        params: {
+          page,
+          queryFilter,
+          orderBy,
+        },
+      });
 
-    getProducts: async (category: string, page: number): Promise<GetProductsResponse> => {
-        try {
-            const { data, headers } = await axios.get(`${category}`, {
-                params: {
-                    page
-                }
-            });
+      const totalCount = Number(headers['x-total-count']);
 
-            const totalCount = Number(headers['x-total-count']);
-
-            return {
-                data,
-                totalCount
-            }
-        } catch (error) {
-            throw new Error("Fail to get televisions");
-        }
-    },
+      return {
+        products: data.products,
+        filters: data.filters,
+        totalCount,
+      };
+    } catch (error) {
+      throw new Error('Fail to get productss');
+    }
+  },
 };

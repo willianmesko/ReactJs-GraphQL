@@ -6,14 +6,11 @@ import {
 } from 'react-router-dom';
 import { Header } from '../components/Header';
 
-import { useAuth } from '../hooks/useAuth';
-
+import { useApp } from '../hooks/useContext';
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
   component: React.ComponentType;
-
-
 }
 
 const Route: React.FC<RouteProps> = ({
@@ -21,7 +18,7 @@ const Route: React.FC<RouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { user } = useAuth();
+  const { user } = useApp();
 
   // if (!user && isPrivate) {
   //   return <Redirect to="/signIn" />;
@@ -35,13 +32,14 @@ const Route: React.FC<RouteProps> = ({
     <ReactDOMRoute
       {...rest}
       render={() => {
-
-        return <Component />
-
+        return (
+          <>
+            <Component />
+          </>
+        );
       }}
     />
   );
 };
-
 
 export default Route;

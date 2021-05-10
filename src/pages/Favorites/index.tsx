@@ -1,69 +1,72 @@
-import { useState } from 'react';
-import { Flex, Box, Text, Stack, Image, Button, ButtonGroup } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Flex, Stack, IconButton, Icon } from '@chakra-ui/react';
+import { IoFilterSharp } from 'react-icons/io5';
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
-import { useAuth } from '../../hooks/useAuth';
-import { useEffect } from 'react';
+import { useApp } from '../../hooks/useContext';
 import { paginationHelper } from '../../utils/pagination';
+import { FilterBar } from '../../components/FilterBar/FilterBar';
+import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
+import { filterData } from '../../utils/filter';
+import { Product } from '../../interfaces/Product.interface';
+import { FavoriteItem } from '../../components/FavoriteItem';
 
 const per_page = 3;
 export default function Favorites() {
-    const { favorites } = useAuth();
-    const [totalCountOfRegister, setTotalCountOfRegistes] = useState<number>((favorites && favorites.length > 0) ? favorites.length : 0)
-    const { user, addFavorites, configs, setConfigs } = useAuth();
+  const {
+    favorites: { products, filters },
+    configs,
+    removeFavorite,
+  } = useApp();
+  const [filtredProducts, setFiltredProducts] = useState<Product[]>([]);
+  const { onOpen } = useSidebarDrawer();
+  const [queryFilter, setQueryFilter] = useState<string>('');
+  const [totalCountOfRegister] = useState<number>(
+    products && products?.length > 0 ? products?.length : 0
+  );
 
-    return (
+  function searchFavorites() {
+    setFiltredProducts(filterData(products, queryFilter));
+  }
+  useEffect(() => {
+    searchFavorites();
+  }, [queryFilter]);
+
+  return (
+    <>
+      <Header />
+      {products.length > 0 && (
         <>
-            <Header />
+          <IconButton
+            aria-label="Open Filters"
+            icon={<Icon as={IoFilterSharp} />}
+            fontSize="30"
+            variant="unstyled"
+            onClick={onOpen}
+            ml="10"
+          ></IconButton>
 
-            <Flex w="100vw" h="80vh" align="center" justify="center" flexDir="column" >
-
-                <Stack>
-                    {favorites
-                        && favorites.length > 0 &&
-                        paginationHelper(favorites, configs.favoritesCurrentPage, per_page).map(favorite => {
-
-                            return (
-
-                                <Flex h="200px"
-                                    w="900px"
-                                    borderBottom="1px solid gray"
-
-                                    py={4}
-                                    px={12} bg="with" color="white">
-                                    <Image src={favorite.imageUrl} w="25%" />
-                                    <Box width="70%">
-                                        <Text fontSize="2xl" letterSpacing="tight" color="gray.400">
-                                            {favorite.name}
-                                        </Text>
-                                        <Text fontSize="2xl" letterSpacing="tight" color="black">
-                                            $ {favorite.price}
-                                        </Text>
-                                    </Box>
-                                    <ButtonGroup flexDir="column" justifyContent="space-around">
-                                        <Button w="200px" bg="blue.400">
-                                            Buy
-                                        </Button>
-                                        <Button w="200px" bg="red.400">
-                                            Remove
-                                        </Button>
-                                    </ButtonGroup>
-                                </Flex>
-
-
-                            )
-
-                        })
-                    }
-
-                </Stack>
-                {favorites && favorites.length > 0 && <Pagination
-                    who="favorites"
-                    totalCountOfRegister={totalCountOfRegister}
-                    currentPage={configs?.favoritesCurrentPage}
-                />}
-
-            </Flex>
+          <FilterBar setQueryFilter={setQueryFilter} filters={filters} />
         </>
-    )
+      )}
+
+      <Flex w="100vw" align="center" justify="center" mt="5" flexDir="column">
+        {products.length === 0 ? (
+          <h1>No favorite found</h1>
+        ) : (
+          <FavoriteItem
+            products={filtredProducts.length > 0 ? filtredProducts : products}
+          />
+        )}
+
+        {products && products?.length > 0 && (
+          <Pagination
+            who="favorites"
+            totalCountOfRegister={totalCountOfRegister}
+            currentPage={configs?.favoritesCurrentPage}
+          />
+        )}
+      </Flex>
+    </>
+  );
 }
