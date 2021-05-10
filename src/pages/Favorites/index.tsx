@@ -1,41 +1,57 @@
 import { useEffect, useState } from 'react';
-import { Flex, Stack, IconButton, Icon } from '@chakra-ui/react';
+import { Flex, Select, IconButton, Icon, Skeleton, Stack, Text } from '@chakra-ui/react';
 import { IoFilterSharp } from 'react-icons/io5';
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
 import { useApp } from '../../hooks/useContext';
-import { paginationHelper } from '../../utils/pagination';
 import { FilterBar } from '../../components/FilterBar/FilterBar';
 import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
 import { filterData } from '../../utils/filter';
+import { orderData } from '../../utils/order';
 import { Product } from '../../interfaces/Product.interface';
 import { FavoriteItem } from '../../components/FavoriteItem';
 
-const per_page = 3;
 export default function Favorites() {
   const {
-    favorites: { products, filters },
+    favorites,
     configs,
-    removeFavorite,
+    setConfigs
   } = useApp();
-  const [filtredProducts, setFiltredProducts] = useState<Product[]>([]);
+  const [filtredProducts, setFiltredProducts] = useState<Product[]>(favorites.products);
+  const [isLoading, setLoading] = useState(false);
   const { onOpen } = useSidebarDrawer();
-  const [queryFilter, setQueryFilter] = useState<string>('');
   const [totalCountOfRegister] = useState<number>(
-    products && products?.length > 0 ? products?.length : 0
+    filtredProducts?.length
   );
 
-  function searchFavorites() {
-    setFiltredProducts(filterData(products, queryFilter));
+  const filtredByLabel = (queryFilter: string) => {
+    const [type, value] = queryFilter.split('?');
+    return `${type.toUpperCase()} ${value.toUpperCase()}`
   }
+  async function searchFavorites() {
+    setLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setFiltredProducts(orderData(favorites?.products, configs?.favoritesOrder))
+
+
+    setFiltredProducts(filterData(favorites?.products, configs?.favoritesQueryFilter))
+    setLoading(false)
+
+  }
+
+
   useEffect(() => {
     searchFavorites();
-  }, [queryFilter]);
+
+  }, [configs?.favoritesQueryFilter, configs?.favoritesOrder, configs?.favoritesCurrentPage, favorites]);
 
   return (
     <>
+
       <Header />
-      {products.length > 0 && (
+
+      {favorites && favorites.products?.length > 0 && (
         <>
           <IconButton
             aria-label="Open Filters"
@@ -46,22 +62,73 @@ export default function Favorites() {
             ml="10"
           ></IconButton>
 
-          <FilterBar setQueryFilter={setQueryFilter} filters={filters} />
+          <FilterBar reference="favorites" filters={favorites.filters} />
         </>
       )}
 
       <Flex w="100vw" align="center" justify="center" mt="5" flexDir="column">
-        {products.length === 0 ? (
-          <h1>No favorite found</h1>
-        ) : (
-          <FavoriteItem
-            products={filtredProducts.length > 0 ? filtredProducts : products}
-          />
+        <Select
+          w="200px"
+          mr="60px"
+          mb="10px"
+          alignSelf="flex-end"
+          placeholder="Order by"
+          value={configs?.favoritesOrder}
+          onChange={(e) => setConfigs({ ...configs, favoritesCurrentPage: 1, favoritesOrder: e.target.value })}
+        >
+          <option value="lowerPrice">Lower price</option>
+          <option value="higherPrice">Higher price</option>
+        </Select>
+        {isLoading && (
+
+          <Stack>
+            <Skeleton
+              h="200px"
+              w="900px"
+              py={4}
+              px={12}
+              borderWidth="1px"
+              borderRadius="lg"
+            />
+            <Skeleton
+              h="200px"
+              w="900px"
+              py={4}
+              px={12}
+              borderWidth="1px"
+              borderRadius="lg"
+            />
+            <Skeleton
+              h="200px"
+              w="900px"
+              py={4}
+              px={12}
+              borderWidth="1px"
+              borderRadius="lg"
+            />
+          </Stack>
+
+        )}
+        {!isLoading && (
+          <>
+            {favorites && favorites?.products?.length === 0 ? (
+              <h1>No favorite found</h1>
+            ) : (
+              <>
+                {configs?.favoritesQueryFilter && <Text fontWeight="bold" fontSize="3xl">{filtredByLabel(configs?.favoritesQueryFilter)}</Text>}
+
+                <FavoriteItem
+                  setFiltredProducts={setFiltredProducts}
+                  products={filtredProducts}
+                />
+              </>
+            )}
+          </>
         )}
 
-        {products && products?.length > 0 && (
+        {filtredProducts.length > 0 && (
           <Pagination
-            who="favorites"
+            reference="favorites"
             totalCountOfRegister={totalCountOfRegister}
             currentPage={configs?.favoritesCurrentPage}
           />

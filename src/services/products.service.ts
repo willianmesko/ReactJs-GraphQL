@@ -14,7 +14,7 @@ export const productsApi = {
     orderBy?: string
   ): Promise<GetProductsResponse> => {
     try {
-      const { data, headers } = await axios.get(`${department}`, {
+      const { data, headers } = await axios.get(`products/${department}`, {
         params: {
           page,
           queryFilter,
@@ -30,7 +30,7 @@ export const productsApi = {
         totalCount,
       };
     } catch (error) {
-      throw new Error('Fail to get productss');
+      throw new Error('Fail to get products');
     }
   },
 };

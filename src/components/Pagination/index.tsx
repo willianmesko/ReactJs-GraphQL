@@ -5,7 +5,7 @@ interface PaginationProps {
   totalCountOfRegister: number;
   registerPerPage?: number;
   currentPage?: number;
-  who: string;
+  reference: string;
 }
 
 const siblingsCount = 1;
@@ -22,7 +22,7 @@ export function Pagination({
   totalCountOfRegister,
   registerPerPage = 3,
   currentPage = 1,
-  who,
+  reference,
 }: PaginationProps) {
   const lastPage = Math.floor(totalCountOfRegister / registerPerPage);
 
@@ -34,9 +34,9 @@ export function Pagination({
   const nextPages =
     currentPage < lastPage
       ? generatePagesArray(
-          currentPage,
-          Math.min(currentPage + siblingsCount, lastPage)
-        )
+        currentPage,
+        Math.min(currentPage + siblingsCount, lastPage)
+      )
       : [];
 
   return (
@@ -44,25 +44,25 @@ export function Pagination({
       <Stack direction="row" mt="8" justify="space-between" align="center">
         {currentPage > 1 + siblingsCount && (
           <>
-            <PaginationItem who={who} number={1} />
+            <PaginationItem reference={reference} number={1} />
             {currentPage > (2 + siblingsCount && <Text>...</Text>)}
           </>
         )}
         {previousPage.length > 0 &&
           previousPage.map((page) => {
-            return <PaginationItem who={who} key={page} number={page} />;
+            return <PaginationItem reference={reference} key={page} number={page} />;
           })}
 
-        <PaginationItem who={who} number={currentPage} isCurrent />
+        <PaginationItem reference={reference} number={currentPage} isCurrent />
 
         {nextPages.length > 0 &&
           nextPages.map((page) => {
-            return <PaginationItem who={who} key={page} number={page} />;
+            return <PaginationItem reference={reference} key={page} number={page} />;
           })}
 
         {currentPage + siblingsCount < lastPage && (
           <>
-            <PaginationItem who={who} number={lastPage} />
+            <PaginationItem reference={reference} number={lastPage} />
             {currentPage + 1 + siblingsCount < lastPage && <Text>...</Text>}
           </>
         )}

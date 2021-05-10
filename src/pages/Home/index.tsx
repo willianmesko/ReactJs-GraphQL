@@ -1,4 +1,4 @@
-import { Flex, Center, SimpleGrid } from '@chakra-ui/react';
+import { Flex, SimpleGrid } from '@chakra-ui/react';
 import { Header } from '../../components/Header';
 import { DepartmentBlock } from '../../components/DepartmentBlock';
 import TelevisionImage from '../../assets/acessories.webp';

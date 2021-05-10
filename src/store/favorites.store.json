@@ -1,0 +1,36 @@
+[
+    {
+        "userUuid": 1,
+        "products": [
+            {
+                "id": 60,
+                "name": "Nintendo Wii U",
+                "price": 39000,
+                "reviewCount": 15,
+                "rating": 3,
+                "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/71oHatSEvBL._AC_SL1500_.jpg",
+                "attributes": [
+                    {
+                        "type": "memory",
+                        "value": "512Gb"
+                    },
+                    {
+                        "type": "condition",
+                        "value": "used"
+                    }
+                ]
+            }
+        ],
+        "filters": [
+            {
+                "name": "Memory",
+                "options": [
+                    "128Gb",
+                    "256gGb",
+                    "512Gb",
+                    "1Tb"
+                ]
+            }
+        ]
+    }
+]

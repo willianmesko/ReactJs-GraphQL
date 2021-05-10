@@ -1,5 +1,4 @@
 import {
-  Box,
   Drawer,
   DrawerHeader,
   DrawerOverlay,
@@ -13,9 +12,10 @@ import { SideBarNav } from './SideBarNav';
 
 interface FilterBarProps {
   filters: Filter[];
-  setQueryFilter(query: string): void;
+  reference: string;
+
 }
-export function FilterBar({ filters, setQueryFilter }: FilterBarProps) {
+export function FilterBar({ filters, reference }: FilterBarProps) {
   const { isOpen, onClose } = useSidebarDrawer();
 
   return (
@@ -24,11 +24,12 @@ export function FilterBar({ filters, setQueryFilter }: FilterBarProps) {
         <DrawerContent>
           <DrawerCloseButton mt="6" />
           <DrawerHeader>FILTERS</DrawerHeader>
+
           <DrawerBody>
-            <SideBarNav setQueryFilter={setQueryFilter} filters={filters} />
+            <SideBarNav reference={reference} filters={filters} />
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
-    </Drawer>
+    </Drawer >
   );
 }

@@ -30,14 +30,12 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-  const { user, setFavorites, configs } = useApp();
+  const { user, setFavorites, configs, setConfigs } = useApp();
   const history = useHistory();
   const [products, setProducts] = useState<Product[]>([]);
   const { onOpen } = useSidebarDrawer();
   const [totalCountOfRegister, setTotalCountOfRegistes] = useState<number>(0);
   const [filters, setFilters] = useState<Filter[]>([]);
-  const [queryFilter, setQueryFilter] = useState<string>('');
-  const [orderBy, setOrderBy] = useState<string>('');
   const [isLoading, setLoading] = useState(false);
 
   const formatter = new Intl.NumberFormat('en-US', {
@@ -50,8 +48,8 @@ export default function Products() {
     const response = await productsApi.getProducts(
       department,
       configs?.productCurrentPage,
-      queryFilter,
-      orderBy
+      configs?.productsQueryFilter,
+      configs?.productsOrder
     );
 
     setProducts(response.products);
@@ -61,7 +59,7 @@ export default function Products() {
   }
   useEffect(() => {
     getProducts();
-  }, [configs?.productCurrentPage, queryFilter, orderBy]);
+  }, [configs?.productCurrentPage, configs?.productsQueryFilter, configs?.productsOrder]);
 
   return (
     <>
@@ -101,7 +99,7 @@ export default function Products() {
             ml="10"
           ></IconButton>
 
-          <FilterBar setQueryFilter={setQueryFilter} filters={filters} />
+          <FilterBar reference="products" filters={filters} />
           <Flex
             w="100vw"
             mt="10"
@@ -109,24 +107,25 @@ export default function Products() {
             justify="center"
             flexDirection="column"
           >
-            {queryFilter && <Text>Filtred by Resolution</Text>}
+
             <Select
               w="200px"
               mr="60px"
               mb="10px"
               alignSelf="flex-end"
               placeholder="Order by"
-              value={orderBy}
-              onChange={(e) => setOrderBy(e.target.value)}
+              value={configs?.productsOrder}
+              onChange={(e) => setConfigs({ ...configs, productCurrentPage: 1, productsOrder: e.target.value })}
             >
               <option value="lowerPrice">Lower price</option>
               <option value="higherPrice">Higher price</option>
             </Select>
             <SimpleGrid columns={3} spacing={20}>
               {products &&
-                products.map((product) => {
+                products.map((product, i) => {
                   return (
                     <Box
+                      key={i}
                       transition="all 0.25s ease"
                       w="300px"
                       h="400px"
@@ -199,9 +198,9 @@ export default function Products() {
                   );
                 })}
             </SimpleGrid>
-            {products && (
+            {products.length >= 3 && (
               <Pagination
-                who="products"
+                reference="products"
                 totalCountOfRegister={totalCountOfRegister}
                 currentPage={configs?.productCurrentPage}
               />

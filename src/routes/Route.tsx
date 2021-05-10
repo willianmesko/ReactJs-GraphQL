@@ -4,7 +4,6 @@ import {
   Route as ReactDOMRoute,
   Redirect,
 } from 'react-router-dom';
-import { Header } from '../components/Header';
 
 import { useApp } from '../hooks/useContext';
 
@@ -20,14 +19,10 @@ const Route: React.FC<RouteProps> = ({
 }) => {
   const { user } = useApp();
 
-  // if (!user && isPrivate) {
-  //   return <Redirect to="/signIn" />;
-  // }
+  if (!user && isPrivate) {
+    return <Redirect to="/signIn" />;
+  }
 
-  // if (user && !isPrivate) {
-
-  //   return <Redirect to="/" />;
-  // }
   return (
     <ReactDOMRoute
       {...rest}

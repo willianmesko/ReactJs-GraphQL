@@ -6,9 +6,10 @@ import {
   Button,
   ListItem,
   UnorderedList,
+
 } from '@chakra-ui/react';
 import { useApp } from '../hooks/useContext';
-import { useSidebarDrawer } from '../hooks/sideBarDrawerContext';
+
 
 export function Header() {
   const history = useHistory();
@@ -42,6 +43,7 @@ export function Header() {
         </Text>
 
         {user ? (
+
           <Button
             onClick={() => signOut()}
             borderRadius="30px"
@@ -52,9 +54,11 @@ export function Header() {
           >
             Log out
           </Button>
+
         ) : (
           <ButtonGroup>
             <Button
+              onClick={() => history.push('/signUp')}
               color="with"
               borderRadius="30px"
               w="100px"

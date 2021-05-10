@@ -1,6 +1,8 @@
 import { useHistory } from 'react-router';
-import { Flex, Button, Stack, Text } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { Flex, Button, Stack, Text, Center } from '@chakra-ui/react';
 import { Input } from '../../components/Form/Input';
+import { FiLogIn } from 'react-icons/fi';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -66,6 +68,7 @@ export default function SignIn() {
       >
         <Stack spacing="4">
           <Text
+            autoC
             fontSize="2xl"
             fontWeight="bold"
             letterSpacing="tight"
@@ -96,6 +99,12 @@ export default function SignIn() {
         >
           Login
         </Button>
+        <Center mt="5">
+          <Link to="signup">
+            <Text fontSize="20" fontWeight="bold"> Sign up</Text>
+
+          </Link>
+        </Center>
       </Flex>
     </Flex>
   );

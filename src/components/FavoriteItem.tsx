@@ -1,8 +1,11 @@
 import { Flex, Box, Text, Image, Stack, Button } from '@chakra-ui/react';
 import { Product } from '../interfaces/Product.interface';
 import { useApp } from '../hooks/useContext';
+import { paginationHelper } from '../utils/pagination';
+
 interface FavoriteItemProps {
   products: Product[];
+  setFiltredProducts(product: Product[]): void;
 }
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -10,12 +13,15 @@ const formatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-export function FavoriteItem({ products }: FavoriteItemProps) {
-  const { removeFavorite } = useApp();
+const per_page = 3;
+export function FavoriteItem({ products, setFiltredProducts }: FavoriteItemProps) {
+  const { removeFavorite, configs } = useApp();
+
 
   return (
     <Stack>
-      {products.map((product, i) => {
+
+      {products?.length > 0 ? paginationHelper(products, configs.favoritesCurrentPage, per_page).map((product, i) => {
         return (
           <Flex
             key={i}
@@ -42,7 +48,7 @@ export function FavoriteItem({ products }: FavoriteItemProps) {
               </Button>
 
               <Text
-                onClick={() => removeFavorite(product.id)}
+                onClick={() => setFiltredProducts(removeFavorite(product))}
                 _hover={{
                   cursor: 'pointer',
                 }}
@@ -55,7 +61,8 @@ export function FavoriteItem({ products }: FavoriteItemProps) {
             </Flex>
           </Flex>
         );
-      })}
+      }) : <h1>No favorites </h1>}
+
     </Stack>
   );
 }

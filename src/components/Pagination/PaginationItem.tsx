@@ -4,13 +4,13 @@ import { useApp } from '../../hooks/useContext';
 interface PaginationItemProps {
   number: number;
   isCurrent?: boolean;
-  who: string;
+  reference: string;
 }
 
 export function PaginationItem({
   isCurrent = false,
   number,
-  who,
+  reference,
 }: PaginationItemProps) {
   const { setConfigs, configs } = useApp();
   if (isCurrent) {
@@ -43,10 +43,11 @@ export function PaginationItem({
       }}
       onClick={() =>
         setConfigs({
+          ...configs,
           favoritesCurrentPage:
-            who === 'favorites' ? number : configs?.favoritesCurrentPage,
+            reference === 'favorites' ? number : configs?.favoritesCurrentPage,
           productCurrentPage:
-            who === 'products' ? number : configs?.productCurrentPage,
+            reference === 'products' ? number : configs?.productCurrentPage,
         })
       }
     >

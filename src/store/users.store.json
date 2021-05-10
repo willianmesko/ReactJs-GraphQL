@@ -1,12 +1,8 @@
 [
     {
-        "id": 1,
+        "uuid": "b687d939-0be6-4714-b9c0-92f2ae70fee9",
         "name": "User",
         "email": "user@gmail.com",
-        "password": "123456",
-        "favorites": {
-            "products": [],
-            "filters": []
-        }
+        "password": "123456"
     }
 ]
