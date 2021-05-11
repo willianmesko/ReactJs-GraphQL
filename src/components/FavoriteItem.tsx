@@ -35,12 +35,12 @@ export function FavoriteItem({
               bg="with"
               color="white"
             >
-              <Image src={product.imageUrl} w="25%" />
+              <Image mr="5" src={product.imageUrl} w="25%" />
               <Box width="70%">
                 <Text fontSize="2xl" letterSpacing="tight" color="gray.400">
                   {product.name}
                 </Text>
-                <Text fontSize="2xl" letterSpacing="tight" color="black">
+                <Text fontSize="20" mt="2" letterSpacing="tight" color="black">
                   {formatter.format(product.price)}
                 </Text>
               </Box>
@@ -50,11 +50,13 @@ export function FavoriteItem({
                 </Button>
 
                 <Text
+                  mt="2"
                   onClick={() => setFiltredProducts(removeFavorite(product))}
                   _hover={{
                     cursor: 'pointer',
+                    color: 'black',
                   }}
-                  fontSize="2xl"
+                  fontSize="20"
                   textAlign="center"
                   color="gray.600"
                 >
