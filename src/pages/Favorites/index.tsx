@@ -15,7 +15,7 @@ import { useApp } from '../../hooks/useContext';
 import { FilterBar } from '../../components/FilterBar/FilterBar';
 import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
 import { filterData } from '../../utils/filter';
-import { orderData } from '../../utils/order';
+import { OrderEnum, orderData } from '../../utils/order';
 import { Product } from '../../interfaces/Product.interface';
 import { FavoriteItem } from '../../components/FavoriteItem';
 
@@ -28,10 +28,11 @@ export default function Favorites() {
   const { onOpen } = useSidebarDrawer();
   const [totalCountOfRegister] = useState<number>(filtredProducts?.length);
 
-  const filtredByLabel = (queryFilter: string) => {
+  const filtredBy = (queryFilter: string) => {
     const [type, value] = queryFilter.split('?');
     return `${type.toUpperCase()} ${value.toUpperCase()}`;
   };
+
   async function searchFavorites() {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -89,8 +90,8 @@ export default function Favorites() {
             })
           }
         >
-          <option value="lowerPrice">Lower price</option>
-          <option value="higherPrice">Higher price</option>
+          <option value={OrderEnum.LOWERPRICE}>Lower price</option>
+          <option value={OrderEnum.HIGHERPRICE}>Higher price</option>
         </Select>
         {isLoading && (
           <Stack>
@@ -128,7 +129,7 @@ export default function Favorites() {
               <>
                 {configs?.favoritesQueryFilter && (
                   <Text fontWeight="bold" fontSize="3xl">
-                    {filtredByLabel(configs?.favoritesQueryFilter)}
+                    {filtredBy(configs?.favoritesQueryFilter)}
                   </Text>
                 )}
 

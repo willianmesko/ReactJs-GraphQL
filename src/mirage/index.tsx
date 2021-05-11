@@ -13,7 +13,7 @@ export function makeServer() {
   const server = createServer({
     models: {
       user: Model,
-      televisions: Model,
+      products: Model,
     },
     routes() {
       this.namespace = 'api';

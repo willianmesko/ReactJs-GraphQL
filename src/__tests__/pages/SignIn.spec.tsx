@@ -5,7 +5,6 @@ import SignIn from '../../pages/SignIn';
 
 const mockedHistoryPush = jest.fn();
 const mockedSignIn = jest.fn();
-const mockedAddToast = jest.fn();
 
 jest.mock('react-router', () => {
   return {

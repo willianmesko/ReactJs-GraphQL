@@ -147,6 +147,8 @@ const AuthProvider: React.FC = ({ children }) => {
     }
 
     const updatedFavorites = favorites;
+    updatedFavorites.filters =
+      updatedFavorites.products.length === 0 ? [] : updatedFavorites.filters;
     updatedFavorites.products.push(product);
 
     filters.map(

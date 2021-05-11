@@ -22,6 +22,7 @@ import { Pagination } from '../../components/Pagination';
 import { FilterBar } from '../../components/FilterBar/FilterBar';
 import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
 import { Filter } from '../../interfaces/Filters.interface';
+import { OrderEnum } from '../../utils/order';
 
 interface RouteParams {
   department: string;
@@ -29,9 +30,7 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-  const {
-    user, setFavorites, configs, setConfigs,
-  } = useApp();
+  const { user, setFavorites, configs, setConfigs } = useApp();
   const history = useHistory();
   const [products, setProducts] = useState<Product[]>([]);
   const { onOpen } = useSidebarDrawer();
@@ -60,7 +59,11 @@ export default function Products() {
   }
   useEffect(() => {
     getProducts();
-  }, [configs?.productCurrentPage, configs?.productsQueryFilter, configs?.productsOrder]);
+  }, [
+    configs?.productCurrentPage,
+    configs?.productsQueryFilter,
+    configs?.productsOrder,
+  ]);
 
   return (
     <>
@@ -108,7 +111,6 @@ export default function Products() {
             justify="center"
             flexDirection="column"
           >
-
             <Select
               w="200px"
               mr="60px"
@@ -116,14 +118,20 @@ export default function Products() {
               alignSelf="flex-end"
               placeholder="Order by"
               value={configs?.productsOrder}
-              onChange={(e) => setConfigs({ ...configs, productCurrentPage: 1, productsOrder: e.target.value })}
+              onChange={e =>
+                setConfigs({
+                  ...configs,
+                  productCurrentPage: 1,
+                  productsOrder: e.target.value,
+                })
+              }
             >
-              <option value="lowerPrice">Lower price</option>
-              <option value="higherPrice">Higher price</option>
+              <option value={OrderEnum.LOWERPRICE}>Lower price</option>
+              <option value={OrderEnum.HIGHERPRICE}>Higher price</option>
             </Select>
             <SimpleGrid columns={3} spacing={20}>
-              {products
-                && products.map((product, i) => (
+              {products &&
+                products.map((product, i) => (
                   <Box
                     key={i}
                     transition="all 0.25s ease"
@@ -154,9 +162,11 @@ export default function Products() {
                           Promo
                         </Badge>
                         <Icon
-                          onClick={() => (user
-                            ? setFavorites(product, filters)
-                            : history.push('/signIn'))}
+                          onClick={() =>
+                            user
+                              ? setFavorites(product, filters)
+                              : history.push('/signIn')
+                          }
                           as={MdFavorite}
                           w={5}
                           h={5}
@@ -183,14 +193,12 @@ export default function Products() {
                             <StarIcon
                               key={i}
                               color={
-                                  i < product.rating ? 'teal.500' : 'gray.300'
-                                }
+                                i < product.rating ? 'teal.500' : 'gray.300'
+                              }
                             />
                           ))}
                         <Box as="span" ml="2" color="gray.600" fontSize="sm">
-                          {product.reviewCount}
-                          {' '}
-                          reviews
+                          {product.reviewCount} reviews
                         </Box>
                       </Box>
                     </Box>

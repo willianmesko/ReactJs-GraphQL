@@ -6,7 +6,6 @@ import {
   Button,
   ListItem,
   UnorderedList,
-
 } from '@chakra-ui/react';
 import { useApp } from '../hooks/useContext';
 
@@ -42,7 +41,6 @@ export function Header() {
         </Text>
 
         {user ? (
-
           <Button
             onClick={() => signOut()}
             borderRadius="30px"
@@ -53,7 +51,6 @@ export function Header() {
           >
             Log out
           </Button>
-
         ) : (
           <ButtonGroup>
             <Button
