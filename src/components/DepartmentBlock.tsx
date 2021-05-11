@@ -1,4 +1,6 @@
-import { Center, Stack, Box, Image, Text } from '@chakra-ui/react';
+import {
+  Center, Stack, Box, Image, Text,
+} from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
 interface FavoritesBlockProps {

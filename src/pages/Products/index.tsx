@@ -29,7 +29,9 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-  const { user, setFavorites, configs, setConfigs } = useApp();
+  const {
+    user, setFavorites, configs, setConfigs,
+  } = useApp();
   const history = useHistory();
   const [products, setProducts] = useState<Product[]>([]);
   const { onOpen } = useSidebarDrawer();
@@ -48,7 +50,7 @@ export default function Products() {
       department,
       configs?.productCurrentPage,
       configs?.productsQueryFilter,
-      configs?.productsOrder
+      configs?.productsOrder,
     );
 
     setProducts(response.products);
@@ -57,9 +59,7 @@ export default function Products() {
     setLoading(false);
   }
   useEffect(() => {
-
     getProducts();
-
   }, [configs?.productCurrentPage, configs?.productsQueryFilter, configs?.productsOrder]);
 
   return (
@@ -98,7 +98,7 @@ export default function Products() {
             variant="unstyled"
             onClick={onOpen}
             ml="10"
-          ></IconButton>
+          />
 
           <FilterBar reference="products" filters={filters} />
           <Flex
@@ -122,82 +122,80 @@ export default function Products() {
               <option value="higherPrice">Higher price</option>
             </Select>
             <SimpleGrid columns={3} spacing={20}>
-              {products &&
-                products.map((product, i) => {
-                  return (
-                    <Box
-                      key={i}
-                      transition="all 0.25s ease"
-                      w="300px"
-                      h="400px"
-                      borderWidth="1px"
-                      borderRadius="lg"
-                      overflow="hidden"
-                      _hover={{
-                        opacity: '0.8',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Image
-                        src={product.imageUrl}
-                        alt={product.name}
-                        w="100%"
-                        h="60"
-                      />
+              {products
+                && products.map((product, i) => (
+                  <Box
+                    key={i}
+                    transition="all 0.25s ease"
+                    w="300px"
+                    h="400px"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    _hover={{
+                      opacity: '0.8',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Image
+                      src={product.imageUrl}
+                      alt={product.name}
+                      w="100%"
+                      h="60"
+                    />
 
-                      <Box p="6">
-                        <Box
-                          d="flex"
-                          justifyContent="space-between"
-                          alignItems="baseline"
-                        >
-                          <Badge borderRadius="full" px="2" colorScheme="teal">
-                            Promo
-                          </Badge>
-                          <Icon
-                            onClick={() =>
-                              user
-                                ? setFavorites(product, filters)
-                                : history.push('/signIn')
-                            }
-                            as={MdFavorite}
-                            w={5}
-                            h={5}
-                            color="with"
-                          />
-                        </Box>
+                    <Box p="6">
+                      <Box
+                        d="flex"
+                        justifyContent="space-between"
+                        alignItems="baseline"
+                      >
+                        <Badge borderRadius="full" px="2" colorScheme="teal">
+                          Promo
+                        </Badge>
+                        <Icon
+                          onClick={() => (user
+                            ? setFavorites(product, filters)
+                            : history.push('/signIn'))}
+                          as={MdFavorite}
+                          w={5}
+                          h={5}
+                          color="with"
+                        />
+                      </Box>
 
-                        <Box
-                          mt="1"
-                          fontWeight="semibold"
-                          as="h2"
-                          lineHeight="tight"
-                          isTruncated
-                        >
-                          {product.name}
-                        </Box>
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h2"
+                        lineHeight="tight"
+                        isTruncated
+                      >
+                        {product.name}
+                      </Box>
 
-                        <Box>{formatter.format(product.price)}</Box>
+                      <Box>{formatter.format(product.price)}</Box>
 
-                        <Box d="flex" mt="2" alignItems="center">
-                          {Array(5)
-                            .fill('')
-                            .map((_, i) => (
-                              <StarIcon
-                                key={i}
-                                color={
+                      <Box d="flex" mt="2" alignItems="center">
+                        {Array(5)
+                          .fill('')
+                          .map((_, i) => (
+                            <StarIcon
+                              key={i}
+                              color={
                                   i < product.rating ? 'teal.500' : 'gray.300'
                                 }
-                              />
-                            ))}
-                          <Box as="span" ml="2" color="gray.600" fontSize="sm">
-                            {product.reviewCount} reviews
-                          </Box>
+                            />
+                          ))}
+                        <Box as="span" ml="2" color="gray.600" fontSize="sm">
+                          {product.reviewCount}
+                          {' '}
+                          reviews
                         </Box>
                       </Box>
                     </Box>
-                  );
-                })}
+                  </Box>
+                ))}
             </SimpleGrid>
             {products.length >= 3 && (
               <Pagination

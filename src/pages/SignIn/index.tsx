@@ -1,10 +1,9 @@
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
 import { Flex, Button, Stack, Text, Center } from '@chakra-ui/react';
-import { Input } from '../../components/Form/Input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Input } from '../../components/Form/Input';
 import { useApp } from '../../hooks/useContext';
 
 type SignInFormData = {
@@ -29,7 +28,7 @@ export default function SignIn() {
     email,
     password,
   }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await signIn({
       email,
       password,
@@ -77,6 +76,7 @@ export default function SignIn() {
             Log in
           </Text>
           <Input
+            placeholder="E-mail"
             type="email"
             label="E-mail"
             error={errors.email}
@@ -84,6 +84,7 @@ export default function SignIn() {
           />
 
           <Input
+            placeholder="Password"
             type="password"
             label="Password"
             error={errors.password}
@@ -96,13 +97,17 @@ export default function SignIn() {
           mt="6"
           isLoading={formState.isSubmitting}
         >
-          Login
+          SignIn
         </Button>
         <Center mt="5">
-          <Link to="signup">
-            <Text fontSize="20" fontWeight="bold"> Sign up</Text>
-
-          </Link>
+          <Text
+            _hover={{ cursor: 'pointer' }}
+            onClick={() => history.push('signup')}
+            fontSize="20"
+            fontWeight="bold"
+          >
+            Sign up
+          </Text>
         </Center>
       </Flex>
     </Flex>

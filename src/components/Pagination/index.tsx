@@ -12,9 +12,7 @@ const siblingsCount = 1;
 
 function generatePagesArray(from: number, to: number) {
   return [...new Array(to - from)]
-    .map((_, index) => {
-      return from + index + 1;
-    })
+    .map((_, index) => from + index + 1)
     .filter((page) => page > 0);
 }
 
@@ -26,18 +24,16 @@ export function Pagination({
 }: PaginationProps) {
   const lastPage = Math.floor(totalCountOfRegister / registerPerPage);
 
-  const previousPage =
-    currentPage > 1
-      ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
-      : [];
+  const previousPage = currentPage > 1
+    ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
+    : [];
 
-  const nextPages =
-    currentPage < lastPage
-      ? generatePagesArray(
-        currentPage,
-        Math.min(currentPage + siblingsCount, lastPage)
-      )
-      : [];
+  const nextPages = currentPage < lastPage
+    ? generatePagesArray(
+      currentPage,
+      Math.min(currentPage + siblingsCount, lastPage),
+    )
+    : [];
 
   return (
     <>
@@ -48,17 +44,13 @@ export function Pagination({
             {currentPage > (2 + siblingsCount && <Text>...</Text>)}
           </>
         )}
-        {previousPage.length > 0 &&
-          previousPage.map((page) => {
-            return <PaginationItem reference={reference} key={page} number={page} />;
-          })}
+        {previousPage.length > 0
+          && previousPage.map((page) => <PaginationItem reference={reference} key={page} number={page} />)}
 
         <PaginationItem reference={reference} number={currentPage} isCurrent />
 
-        {nextPages.length > 0 &&
-          nextPages.map((page) => {
-            return <PaginationItem reference={reference} key={page} number={page} />;
-          })}
+        {nextPages.length > 0
+          && nextPages.map((page) => <PaginationItem reference={reference} key={page} number={page} />)}
 
         {currentPage + siblingsCount < lastPage && (
           <>

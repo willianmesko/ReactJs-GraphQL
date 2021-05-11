@@ -97,7 +97,7 @@ export function makeServer() {
           throw new Error('Email or password is invalid');
         }
 
-        return new Response(200, {}, { user });
+        return new Response(200, {}, user);
       });
     },
   });

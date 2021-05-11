@@ -30,6 +30,6 @@ export function FilterBar({ filters, reference }: FilterBarProps) {
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
-    </Drawer >
+    </Drawer>
   );
 }

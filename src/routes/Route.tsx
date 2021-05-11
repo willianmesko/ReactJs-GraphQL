@@ -26,13 +26,11 @@ const Route: React.FC<RouteProps> = ({
   return (
     <ReactDOMRoute
       {...rest}
-      render={() => {
-        return (
-          <>
-            <Component />
-          </>
-        );
-      }}
+      render={() => (
+        <>
+          <Component />
+        </>
+      )}
     />
   );
 };

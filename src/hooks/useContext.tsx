@@ -1,11 +1,11 @@
 import React, { createContext, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { usersApi } from '../services/users.service';
 import { User } from '../interfaces/User.interface';
 import { Favorites } from '../interfaces/Favorites.interface';
 import { Product } from '../interfaces/Product.interface';
 import { Config } from '../interfaces/Config.interface';
-import { toast } from 'react-toastify';
 import { Filter } from '../interfaces/Filters.interface';
 
 interface SignInCredencials {
@@ -65,33 +65,36 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signIn = async ({ email, password }: SignInCredencials) => {
-    const { user } = await usersApi.signIn(email, password);
+    const response = await usersApi.signIn(email, password);
+    const user = response.data;
+
     localStorage.setItem('@growthHackers:user', JSON.stringify(user));
     localStorage.setItem(
       '@growthHackers:configs',
-      JSON.stringify(defaultsConfigs)
+      JSON.stringify(defaultsConfigs),
     );
 
     setData({
-      user, favorites: {
+      user,
+      favorites: {
         userUuid: user.uuid,
         products: [],
-        filters: []
-      }, configs: defaultsConfigs
+        filters: [],
+      },
+      configs: defaultsConfigs,
     });
-  }
+  };
 
-  const signUp = async ({ name, email, password }: SignUpDTO): Promise<void> => {
-
+  const signUp = async ({
+    name,
+    email,
+    password,
+  }: SignUpDTO): Promise<void> => {
     try {
       await usersApi.signUp(name, email, password);
-      history.push("/signIn")
-    } catch (error) {
-
-    }
-
-  }
-
+      history.push('/signIn');
+    } catch (error) {}
+  };
 
   const signOut = () => {
     localStorage.removeItem('@growthHackers:user');
@@ -99,7 +102,7 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('@growthHackers:configs');
     history.push('/');
     setData({} as AppState);
-  }
+  };
 
   const setConfigs = (configs: Config) => {
     localStorage.setItem('@growthHackers:configs', JSON.stringify(configs));
@@ -107,16 +110,15 @@ const AuthProvider: React.FC = ({ children }) => {
       ...data,
       configs,
     });
-  }
+  };
 
   const removeFavorite = (product: Product): Product[] => {
     const { favorites } = data;
 
-    let updatedFavorites = favorites;
-
+    const updatedFavorites = favorites;
 
     updatedFavorites.products = updatedFavorites.products.filter(
-      (favoriteProduct) => favoriteProduct.id !== product.id
+      favoriteProduct => favoriteProduct.id !== product.id,
     );
 
     setData({
@@ -125,20 +127,18 @@ const AuthProvider: React.FC = ({ children }) => {
     });
     localStorage.setItem(
       '@growthHackers:favorites',
-      JSON.stringify(updatedFavorites)
+      JSON.stringify(updatedFavorites),
     );
-
-
 
     return updatedFavorites.products;
   };
 
-
-
   const setFavorites = async (product: Product, filters: Filter[]) => {
     const { favorites } = data;
 
-    const findFavorite = favorites.products.find(favoriteProduct => favoriteProduct.name === product.name);
+    const findFavorite = favorites.products.find(
+      favoriteProduct => favoriteProduct.name === product.name,
+    );
 
     if (findFavorite) {
       toast.error('Favorite already include');
@@ -152,15 +152,14 @@ const AuthProvider: React.FC = ({ children }) => {
     filters.map(
       (filter: Filter) =>
         !updatedFavorites.filters.find(
-          (favoriteFilter) => favoriteFilter.name === filter.name
-        ) && updatedFavorites.filters.push(filter)
+          favoriteFilter => favoriteFilter.name === filter.name,
+        ) && updatedFavorites.filters.push(filter),
     );
 
     localStorage.setItem(
       '@growthHackers:favorites',
-      JSON.stringify(updatedFavorites)
+      JSON.stringify(updatedFavorites),
     );
-
 
     setData({
       ...data,

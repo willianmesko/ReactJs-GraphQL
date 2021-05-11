@@ -1,24 +1,18 @@
-import { User } from '../interfaces/User.interface';
-import axios from './api';
 import { toast } from 'react-toastify';
-
-interface ResponseLogin {
-  user: User;
-}
+import axios from './api';
 
 export const usersApi = {
-  signIn: async (email: string, password: string): Promise<ResponseLogin> => {
+  signIn: async (email: string, password: string) => {
     try {
-      const { data } = await axios.post<ResponseLogin>('session', {
+      const  response = await axios.post('session', {
         email,
         password,
       });
-      const { user } = data;
 
-      return {
-        user
-      };
+
+      return  response
     } catch (error) {
+
       toast.error('Email/password is invalid');
       throw new Error();
     }
@@ -33,12 +27,11 @@ export const usersApi = {
       const { user } = data;
 
       return {
-        user
+        user,
       };
     } catch (error) {
-
       toast.error('Account Already exists');
       throw new Error();
     }
-  }
+  },
 };

@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { useApp } from '../hooks/useContext';
 
-
 export function Header() {
   const history = useHistory();
   const location = useLocation();

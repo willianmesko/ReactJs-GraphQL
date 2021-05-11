@@ -11,7 +11,7 @@ export const productsApi = {
     department: string,
     page: number,
     queryFilter?: string,
-    orderBy?: string
+    orderBy?: string,
   ): Promise<GetProductsResponse> => {
     try {
       const { data, headers } = await axios.get(`products/${department}`, {
