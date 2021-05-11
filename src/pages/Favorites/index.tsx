@@ -33,8 +33,9 @@ export default function Favorites() {
     return `${type.toUpperCase()} ${value.toUpperCase()}`;
   };
   async function searchFavorites() {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     setFiltredProducts(orderData(favorites?.products, configs?.favoritesOrder));
 
     setFiltredProducts(
@@ -80,11 +81,13 @@ export default function Favorites() {
           alignSelf="flex-end"
           placeholder="Order by"
           value={configs?.favoritesOrder}
-          onChange={(e) => setConfigs({
-            ...configs,
-            favoritesCurrentPage: 1,
-            favoritesOrder: e.target.value,
-          })}
+          onChange={e =>
+            setConfigs({
+              ...configs,
+              favoritesCurrentPage: 1,
+              favoritesOrder: e.target.value,
+            })
+          }
         >
           <option value="lowerPrice">Lower price</option>
           <option value="higherPrice">Higher price</option>
