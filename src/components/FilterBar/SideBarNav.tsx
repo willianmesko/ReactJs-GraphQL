@@ -12,16 +12,21 @@ export function SideBarNav({ filters, reference }: SideBarNavProps) {
 
   return (
     <>
-
       <Text
-        onClick={() => setConfigs({
-          favoritesQueryFilter: reference === 'favorites' ? '' : configs?.favoritesQueryFilter,
-          productsQueryFilter: reference === 'products' ? '' : configs?.productsQueryFilter,
-          favoritesOrder: configs?.favoritesOrder,
-          productsOrder: configs?.productsOrder,
-          favoritesCurrentPage: reference === 'favorites' ? 1 : configs?.favoritesCurrentPage,
-          productCurrentPage: reference === 'products' ? 1 : configs?.productCurrentPage,
-        })}
+        onClick={() =>
+          setConfigs({
+            favoritesQueryFilter:
+              reference === 'favorites' ? '' : configs?.favoritesQueryFilter,
+            productsQueryFilter:
+              reference === 'products' ? '' : configs?.productsQueryFilter,
+            favoritesOrder: configs?.favoritesOrder,
+            productsOrder: configs?.productsOrder,
+            favoritesCurrentPage:
+              reference === 'favorites' ? 1 : configs?.favoritesCurrentPage,
+            productCurrentPage:
+              reference === 'products' ? 1 : configs?.productCurrentPage,
+          })
+        }
         _hover={{ cursor: 'pointer' }}
         fontSize="20"
         mb="10"
@@ -30,10 +35,9 @@ export function SideBarNav({ filters, reference }: SideBarNavProps) {
         Clear Filter
       </Text>
       <Stack spacing="12" align="flex-start">
-
         <Box>
-          {filters
-            && filters.map((filter, i) => (
+          {filters &&
+            filters.map((filter, i) => (
               <>
                 <Text
                   key={filter.name + i}
@@ -49,15 +53,30 @@ export function SideBarNav({ filters, reference }: SideBarNavProps) {
                     mb="2px"
                     _hover={{
                       cursor: 'pointer',
+                      color: 'green.800',
                     }}
-                    onClick={() => setConfigs({
-                      favoritesQueryFilter: reference === 'favorites' ? `${filter.name}?${option}` : configs?.favoritesQueryFilter,
-                      productsQueryFilter: reference === 'products' ? `${filter.name}?${option}` : configs?.productsQueryFilter,
-                      favoritesOrder: configs?.favoritesOrder,
-                      productsOrder: configs?.productsOrder,
-                      favoritesCurrentPage: reference === 'favorites' ? 1 : configs?.favoritesCurrentPage,
-                      productCurrentPage: reference === 'products' ? 1 : configs?.productCurrentPage,
-                    })}
+                    onClick={() =>
+                      setConfigs({
+                        favoritesQueryFilter:
+                          reference === 'favorites'
+                            ? `${filter.name}?${option}`
+                            : configs?.favoritesQueryFilter,
+                        productsQueryFilter:
+                          reference === 'products'
+                            ? `${filter.name}?${option}`
+                            : configs?.productsQueryFilter,
+                        favoritesOrder: configs?.favoritesOrder,
+                        productsOrder: configs?.productsOrder,
+                        favoritesCurrentPage:
+                          reference === 'favorites'
+                            ? 1
+                            : configs?.favoritesCurrentPage,
+                        productCurrentPage:
+                          reference === 'products'
+                            ? 1
+                            : configs?.productCurrentPage,
+                      })
+                    }
                   >
                     {option}
                   </Text>

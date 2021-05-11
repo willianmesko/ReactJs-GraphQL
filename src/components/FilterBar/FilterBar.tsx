@@ -13,7 +13,6 @@ import { SideBarNav } from './SideBarNav';
 interface FilterBarProps {
   filters: Filter[];
   reference: string;
-
 }
 export function FilterBar({ filters, reference }: FilterBarProps) {
   const { isOpen, onClose } = useSidebarDrawer();

@@ -41,13 +41,15 @@ export function PaginationItem({
       _disabled={{
         bgColor: 'gray:500',
       }}
-      onClick={() => setConfigs({
-        ...configs,
-        favoritesCurrentPage:
+      onClick={() =>
+        setConfigs({
+          ...configs,
+          favoritesCurrentPage:
             reference === 'favorites' ? number : configs?.favoritesCurrentPage,
-        productCurrentPage:
+          productCurrentPage:
             reference === 'products' ? number : configs?.productCurrentPage,
-      })}
+        })
+      }
     >
       {number}
     </Button>

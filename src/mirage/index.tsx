@@ -5,7 +5,7 @@ import gamesData from '../store/games.store.json';
 import usersData from '../store/users.store.json';
 import { paginationHelper } from '../utils/pagination';
 import { filterData } from '../utils/filter';
-import { orderData } from '../utils/order';
+import { sortData } from '../utils/sort';
 import { v4 as uuidv4 } from 'uuid';
 import { Filter } from '../interfaces/Filters.interface';
 
@@ -48,7 +48,7 @@ export function makeServer() {
         }
 
         if (orderBy) {
-          products = orderData(products, orderBy);
+          products = sortData(products, orderBy);
         }
 
         const response = paginationHelper(

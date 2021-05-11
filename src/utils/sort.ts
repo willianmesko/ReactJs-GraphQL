@@ -1,16 +1,16 @@
 import { Product } from '../interfaces/Product.interface';
 
-export enum OrderEnum {
+export enum SortOptionsEnum {
   LOWERPRICE = "LOWERPRICE",
   HIGHERPRICE = "HIGHERPRICE",
 }
 
-export function orderData(data: Product[], orderBy: string) {
-  switch (orderBy) {
-    case OrderEnum.LOWERPRICE:
+export function sortData(data: Product[], sortBy: string) {
+  switch (sortBy) {
+    case SortOptionsEnum.LOWERPRICE:
       data = data.sort((a, b) => (a.price < b.price ? -1 : a.price > b.price ? 1 : 0));
       break;
-    case OrderEnum.HIGHERPRICE:
+    case SortOptionsEnum.HIGHERPRICE:
       data = data.sort((a, b) => (a.price > b.price ? -1 : a.price < b.price ? 1 : 0));
       break;
   }

@@ -15,7 +15,7 @@ import { useApp } from '../../hooks/useContext';
 import { FilterBar } from '../../components/FilterBar/FilterBar';
 import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
 import { filterData } from '../../utils/filter';
-import { OrderEnum, orderData } from '../../utils/order';
+import { SortOptionsEnum, sortData } from '../../utils/sort';
 import { Product } from '../../interfaces/Product.interface';
 import { FavoriteItem } from '../../components/FavoriteItem';
 
@@ -37,7 +37,7 @@ export default function Favorites() {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    setFiltredProducts(orderData(favorites?.products, configs?.favoritesOrder));
+    setFiltredProducts(sortData(favorites?.products, configs?.favoritesOrder));
 
     setFiltredProducts(
       filterData(favorites?.products, configs?.favoritesQueryFilter),
@@ -80,7 +80,7 @@ export default function Favorites() {
           mr="60px"
           mb="10px"
           alignSelf="flex-end"
-          placeholder="Order by"
+          placeholder="Sort by"
           value={configs?.favoritesOrder}
           onChange={e =>
             setConfigs({
@@ -90,8 +90,10 @@ export default function Favorites() {
             })
           }
         >
-          <option value={OrderEnum.LOWERPRICE}>Lower price</option>
-          <option value={OrderEnum.HIGHERPRICE}>Higher price</option>
+          <option value={SortOptionsEnum.LOWERPRICE}>Price: Low to High</option>
+          <option value={SortOptionsEnum.HIGHERPRICE}>
+            Price: High to Low
+          </option>
         </Select>
         {isLoading && (
           <Stack>
@@ -142,7 +144,7 @@ export default function Favorites() {
           </>
         )}
 
-        {filtredProducts.length > 0 && (
+        {filtredProducts.length >= 3 && (
           <Pagination
             reference="favorites"
             totalCountOfRegister={totalCountOfRegister}

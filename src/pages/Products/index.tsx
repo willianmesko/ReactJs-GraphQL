@@ -22,7 +22,7 @@ import { Pagination } from '../../components/Pagination';
 import { FilterBar } from '../../components/FilterBar/FilterBar';
 import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
 import { Filter } from '../../interfaces/Filters.interface';
-import { OrderEnum } from '../../utils/order';
+import { SortOptionsEnum } from '../../utils/sort';
 
 interface RouteParams {
   department: string;
@@ -116,7 +116,7 @@ export default function Products() {
               mr="60px"
               mb="10px"
               alignSelf="flex-end"
-              placeholder="Order by"
+              placeholder="Sort by"
               value={configs?.productsOrder}
               onChange={e =>
                 setConfigs({
@@ -126,8 +126,12 @@ export default function Products() {
                 })
               }
             >
-              <option value={OrderEnum.LOWERPRICE}>Lower price</option>
-              <option value={OrderEnum.HIGHERPRICE}>Higher price</option>
+              <option value={SortOptionsEnum.LOWERPRICE}>
+                Price: Low to High
+              </option>
+              <option value={SortOptionsEnum.HIGHERPRICE}>
+                Price: High to Low
+              </option>
             </Select>
             <SimpleGrid columns={3} spacing={20}>
               {products &&
