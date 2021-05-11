@@ -121,6 +121,8 @@ const AuthProvider: React.FC = ({ children }) => {
       favoriteProduct => favoriteProduct.id !== product.id,
     );
 
+    updatedFavorites.filters =
+      updatedFavorites.products.length === 0 ? [] : updatedFavorites.filters;
     setData({
       ...data,
       favorites: updatedFavorites,
@@ -147,8 +149,7 @@ const AuthProvider: React.FC = ({ children }) => {
     }
 
     const updatedFavorites = favorites;
-    updatedFavorites.filters =
-      updatedFavorites.products.length === 0 ? [] : updatedFavorites.filters;
+
     updatedFavorites.products.push(product);
 
     filters.map(
