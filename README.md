@@ -1,3 +1,4 @@
+Site deployed https://growthhackers2.netlify.app/ <br>
 MirageJs is used to mock a fake server. <br>
 Can be logged in with "user@example.com", "123456" or create a new user.  <br>
 User, favorites and configs (sort, pagination, filters) are saved in localStorage until SignOut is done.  <br>
