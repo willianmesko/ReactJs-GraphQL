@@ -15,12 +15,11 @@ export function SideBarNav({ filters, reference }: SideBarNavProps) {
       <Text
         onClick={() =>
           setConfigs({
+            ...configs,
             favoritesQueryFilter:
               reference === 'favorites' ? '' : configs?.favoritesQueryFilter,
             productsQueryFilter:
               reference === 'products' ? '' : configs?.productsQueryFilter,
-            favoritesOrder: configs?.favoritesOrder,
-            productsOrder: configs?.productsOrder,
             favoritesCurrentPage:
               reference === 'favorites' ? 1 : configs?.favoritesCurrentPage,
             productCurrentPage:
@@ -57,6 +56,7 @@ export function SideBarNav({ filters, reference }: SideBarNavProps) {
                     }}
                     onClick={() =>
                       setConfigs({
+                        ...configs,
                         favoritesQueryFilter:
                           reference === 'favorites'
                             ? `${filter.name}?${option}`
@@ -65,8 +65,6 @@ export function SideBarNav({ filters, reference }: SideBarNavProps) {
                           reference === 'products'
                             ? `${filter.name}?${option}`
                             : configs?.productsQueryFilter,
-                        favoritesOrder: configs?.favoritesOrder,
-                        productsOrder: configs?.productsOrder,
                         favoritesCurrentPage:
                           reference === 'favorites'
                             ? 1

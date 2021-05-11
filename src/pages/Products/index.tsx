@@ -12,7 +12,7 @@ import {
   Select,
 } from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
-import { MdFavorite } from 'react-icons/md';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { IoFilterSharp } from 'react-icons/io5';
 import { Header } from '../../components/Header';
 import { productsApi } from '../../services/products.service';
@@ -30,7 +30,8 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-  const { user, setFavorites, configs, setConfigs } = useApp();
+  const { user, favorites, setFavorites, removeFavorite, configs, setConfigs } =
+    useApp();
   const history = useHistory();
   const [products, setProducts] = useState<Product[]>([]);
   const { onOpen } = useSidebarDrawer();
@@ -42,6 +43,10 @@ export default function Products() {
     style: 'currency',
     currency: 'USD',
   });
+
+  const isFavorite = (item: Product) => {
+    return favorites?.products?.find(product => item.name === product.name);
+  };
 
   async function getProducts(): Promise<void> {
     setLoading(true);
@@ -165,17 +170,40 @@ export default function Products() {
                         <Badge borderRadius="full" px="2" colorScheme="teal">
                           Promo
                         </Badge>
-                        <Icon
+                        {isFavorite(product) ? (
+                          <MdFavorite
+                            onClick={() =>
+                              user
+                                ? removeFavorite(product)
+                                : history.push('/signIn')
+                            }
+                          />
+                        ) : (
+                          <MdFavoriteBorder
+                            onClick={() =>
+                              user
+                                ? setFavorites(product, filters)
+                                : history.push('/signIn')
+                            }
+                          />
+                        )}
+                        {/* <Icon
                           onClick={() =>
                             user
                               ? setFavorites(product, filters)
                               : history.push('/signIn')
                           }
-                          as={MdFavorite}
+                          as={
+                            isFavorite(product) ? (
+                              <MdFavorite />
+                            ) : (
+                              <MdFavoriteBorder />
+                            )
+                          }
                           w={5}
                           h={5}
                           color="with"
-                        />
+                        /> */}
                       </Box>
 
                       <Box
