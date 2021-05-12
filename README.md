@@ -2,7 +2,7 @@ app deployed https://growthhackers2.netlify.app/
 
 Nacapi is used to mock a fake server. <br>
 Can be logged in with "user@example.com", "123456" or create a new user.  <br>
-User, favorites and configs (sort, pagination, filters) are saved in localStorage.  <br>
+User and configs (sort, pagination, filters) are saved in localStorage.  <br>
 A backend in NestJs was started but not completed. https://github.com/willianmesko/growthhacker-backend <br>
 
 
