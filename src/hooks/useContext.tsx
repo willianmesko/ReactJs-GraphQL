@@ -112,13 +112,12 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const removeFavorite = async (product: Product): Promise<void> => {
     const { user } = data;
-
+    await favoritesApi.deleteFavorite(user.uuid, product);
     setFavorites({
       ...favorites,
       products: favorites.products.filter(p => p.name !== product.name),
       filters: favorites.products.length === 0 ? [] : favorites.filters,
     });
-    await favoritesApi.deleteFavorite(user.uuid, product);
   };
 
   const getFavorites = async (
@@ -141,6 +140,11 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const setUserFavorites = async (product: Product, filters: Filter[]) => {
     const { user } = data;
+    await favoritesApi.createFavorite({
+      userUuid: user.uuid,
+      products: [product],
+      filters,
+    });
 
     if (Object.keys(favorites).length !== 0) {
       if (favorites?.products?.find((p: Product) => p.name === product.name)) {
@@ -168,11 +172,6 @@ const AuthProvider: React.FC = ({ children }) => {
     }
 
     toast.success('Favorite added.');
-    await favoritesApi.createFavorite({
-      userUuid: user.uuid,
-      products: [product],
-      filters,
-    });
   };
 
   return (

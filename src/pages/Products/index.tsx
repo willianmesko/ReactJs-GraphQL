@@ -10,6 +10,7 @@ import {
   IconButton,
   Skeleton,
   Select,
+  Spinner,
 } from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
@@ -44,7 +45,7 @@ export default function Products() {
   const [totalCountOfRegister, setTotalCountOfRegistes] = useState<number>(0);
   const [filters, setFilters] = useState<Filter[]>([]);
   const [isLoading, setLoading] = useState(false);
-
+  const [isSettingFavorite, setIsSettingFavorite] = useState(false);
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -52,6 +53,12 @@ export default function Products() {
 
   const isFavorite = (item: Product) => {
     return favorites?.products?.find(product => item.name === product.name);
+  };
+
+  const setFavorites = async (product: Product, filter: Filter[]) => {
+    setIsSettingFavorite(true);
+    await setUserFavorites(product, filter);
+    setIsSettingFavorite(false);
   };
 
   async function getProducts(): Promise<void> {
@@ -79,6 +86,7 @@ export default function Products() {
   return (
     <>
       <Header />
+      {<Flex w="100vw" mt="10" align="center" justify="center"></Flex>}
       {isLoading ? (
         <Flex w="100vw" mt="10" align="center" justify="center">
           <Skeleton
@@ -122,6 +130,17 @@ export default function Products() {
             justify="center"
             flexDirection="column"
           >
+            {isSettingFavorite && (
+              <Spinner
+                position="absolute"
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="green.800"
+                size="xl"
+              />
+            )}
+
             <Select
               w="200px"
               mr="60px"
@@ -178,9 +197,11 @@ export default function Products() {
                         </Badge>
                         {isFavorite(product) ? (
                           <MdFavorite
-                            onClick={() =>
+                            onClick={async () =>
                               user
-                                ? removeFavorite(product)
+                                ? (setIsSettingFavorite(true),
+                                  await removeFavorite(product),
+                                  setIsSettingFavorite(false))
                                 : history.push('/signIn')
                             }
                           />
@@ -188,7 +209,7 @@ export default function Products() {
                           <MdFavoriteBorder
                             onClick={() =>
                               user
-                                ? setUserFavorites(product, filters)
+                                ? setFavorites(product, filters)
                                 : history.push('/signIn')
                             }
                           />
