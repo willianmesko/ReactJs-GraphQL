@@ -13,7 +13,7 @@ export default function Home() {
         <SimpleGrid columns={3} spacing={20}>
           <DepartmentBlock name="Televisions" image={TelevisionImage} />
           <DepartmentBlock name="Games" image={GamesImage} />
-          <DepartmentBlock name="Cell Phones" image={CellPhone} />
+          <DepartmentBlock name="CellPhones" image={CellPhone} />
         </SimpleGrid>
       </Flex>
     </>
