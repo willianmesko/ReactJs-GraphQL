@@ -14,52 +14,45 @@ import { Pagination } from '../../components/Pagination';
 import { useApp } from '../../hooks/useContext';
 import { FilterBar } from '../../components/FilterBar/FilterBar';
 import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
-import { filterData } from '../../utils/filter';
-import { SortOptionsEnum, sortData } from '../../utils/sort';
-import { Product } from '../../interfaces/Product.interface';
+import { SortOptionsEnum } from '../../utils/sort';
 import { FavoriteItem } from '../../components/FavoriteItem';
 
-export default function Favorites() {
-  const { favorites, configs, setConfigs } = useApp();
-  const [filtredProducts, setFiltredProducts] = useState<Product[]>(
-    favorites.products,
-  );
+export default function FavoritesPage() {
+  const { configs, setConfigs, getFavorites, favorites } = useApp();
   const [isLoading, setLoading] = useState(false);
   const { onOpen } = useSidebarDrawer();
-  const [totalCountOfRegister] = useState<number>(filtredProducts?.length);
+  const [totalCountOfRegister, setTotalCountOfRegister] = useState<number>(0);
 
   const filtredBy = (queryFilter: string) => {
     const [type, value] = queryFilter.split('?');
     return `${type.toUpperCase()} ${value.toUpperCase()}`;
   };
 
-  async function searchFavorites() {
+  async function awaitGetFavorites() {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    setFiltredProducts(sortData(favorites?.products, configs?.favoritesOrder));
-
-    setFiltredProducts(
-      filterData(favorites?.products, configs?.favoritesQueryFilter),
+    const totalAccount = await getFavorites(
+      configs.favoritesCurrentPage,
+      configs.favoritesQueryFilter,
+      configs.favoritesOrder,
     );
-
+    setTotalCountOfRegister(totalAccount);
     setLoading(false);
   }
 
   useEffect(() => {
-    searchFavorites();
+    awaitGetFavorites();
   }, [
-    configs?.favoritesQueryFilter,
-    configs?.favoritesOrder,
-    configs?.favoritesCurrentPage,
-    favorites,
+    configs.favoritesCurrentPage,
+    configs.favoritesQueryFilter,
+    configs.favoritesOrder,
   ]);
 
   return (
     <>
       <Header />
 
-      {favorites && favorites.products?.length > 0 && (
+      {favorites && favorites.products && favorites.products.length >= 0 && (
         <>
           <IconButton
             aria-label="Open Filters"
@@ -125,26 +118,23 @@ export default function Favorites() {
         )}
         {!isLoading && (
           <>
-            {favorites && favorites?.products?.length === 0 ? (
+            {configs?.favoritesQueryFilter && (
+              <Text fontWeight="bold" fontSize="3xl">
+                {filtredBy(configs?.favoritesQueryFilter)}
+              </Text>
+            )}
+            {favorites &&
+            favorites.products &&
+            favorites?.products?.length === 0 ? (
               <h1>No favorite found</h1>
             ) : (
               <>
-                {configs?.favoritesQueryFilter && (
-                  <Text fontWeight="bold" fontSize="3xl">
-                    {filtredBy(configs?.favoritesQueryFilter)}
-                  </Text>
-                )}
-
-                <FavoriteItem
-                  setFiltredProducts={setFiltredProducts}
-                  products={filtredProducts}
-                />
+                <FavoriteItem products={favorites?.products} />
               </>
             )}
           </>
         )}
-
-        {filtredProducts.length >= 3 && (
+        {favorites && favorites.products && favorites?.products.length >= 3 && (
           <Pagination
             reference="favorites"
             totalCountOfRegister={totalCountOfRegister}

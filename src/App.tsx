@@ -5,9 +5,6 @@ import { theme } from './styles/theme';
 import Routes from './routes';
 import AppProvider from './hooks';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeServer } from './mirage';
-
-makeServer();
 
 export function App() {
   return (

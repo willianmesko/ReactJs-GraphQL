@@ -1,12 +1,13 @@
 import React, { createContext, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { usersApi } from '../services/users.service';
 import { User } from '../interfaces/User.interface';
 import { Favorites } from '../interfaces/Favorites.interface';
 import { Product } from '../interfaces/Product.interface';
 import { Config } from '../interfaces/Config.interface';
 import { Filter } from '../interfaces/Filters.interface';
+import { favoritesApi } from '../services/favorites.service';
+import { toast } from 'react-toastify';
 
 interface SignInCredencials {
   email: string;
@@ -24,8 +25,13 @@ interface AppContextData {
   signIn(credencials: SignInCredencials): Promise<void>;
   signUp(signUpDto: SignUpDTO): Promise<void>;
   signOut(): void;
-  setFavorites(product: Product, filters: Filter[]): void;
-  removeFavorite(product: Product): Product[];
+  setUserFavorites(product: Product, filters: Filter[]): void;
+  getFavorites(
+    page: number,
+    queryFilter: string,
+    sortBy: String,
+  ): Promise<number>;
+  removeFavorite(product: Product): Promise<void>;
   favorites: Favorites;
   configs: Config;
   setConfigs(configs?: Config): void;
@@ -33,7 +39,6 @@ interface AppContextData {
 
 interface AppState {
   user: User;
-  favorites: Favorites;
   configs: Config;
 }
 
@@ -49,14 +54,13 @@ const AuthProvider: React.FC = ({ children }) => {
     favoritesQueryFilter: '',
   };
   const history = useHistory();
+  const [favorites, setFavorites] = useState<Favorites>({} as Favorites);
   const [data, setData] = useState<AppState>(() => {
     const user = localStorage.getItem('@growthHackers:user');
-    const favorites = localStorage.getItem('@growthHackers:favorites');
     const configs = localStorage.getItem('@growthHackers:configs');
-    if (user && favorites && configs) {
+    if (user && configs) {
       return {
         user: JSON.parse(user),
-        favorites: JSON.parse(favorites),
         configs: JSON.parse(configs),
       };
     }
@@ -65,8 +69,7 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signIn = async ({ email, password }: SignInCredencials) => {
-    const response = await usersApi.signIn(email, password);
-    const user = response.data;
+    const user = await usersApi.signIn(email, password);
 
     localStorage.setItem('@growthHackers:user', JSON.stringify(user));
     localStorage.setItem(
@@ -76,11 +79,6 @@ const AuthProvider: React.FC = ({ children }) => {
 
     setData({
       user,
-      favorites: {
-        userUuid: user.uuid,
-        products: [],
-        filters: [],
-      },
       configs: defaultsConfigs,
     });
   };
@@ -98,8 +96,8 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signOut = () => {
     localStorage.removeItem('@growthHackers:user');
-    localStorage.removeItem('@growthHackers:favorites');
     localStorage.removeItem('@growthHackers:configs');
+
     history.push('/');
     setData({} as AppState);
   };
@@ -112,64 +110,69 @@ const AuthProvider: React.FC = ({ children }) => {
     });
   };
 
-  const removeFavorite = (product: Product): Product[] => {
-    const { favorites } = data;
+  const removeFavorite = async (product: Product): Promise<void> => {
+    const { user } = data;
 
-    const updatedFavorites = favorites;
-
-    updatedFavorites.products = updatedFavorites.products.filter(
-      favoriteProduct => favoriteProduct.id !== product.id,
-    );
-
-    updatedFavorites.filters =
-      updatedFavorites.products.length === 0 ? [] : updatedFavorites.filters;
-    setData({
-      ...data,
-      favorites: updatedFavorites,
+    setFavorites({
+      ...favorites,
+      products: favorites.products.filter(p => p.name !== product.name),
+      filters: favorites.products.length === 0 ? [] : favorites.filters,
     });
-    localStorage.setItem(
-      '@growthHackers:favorites',
-      JSON.stringify(updatedFavorites),
-    );
-
-    return updatedFavorites.products;
+    await favoritesApi.deleteFavorite(user.uuid, product);
   };
 
-  const setFavorites = async (product: Product, filters: Filter[]) => {
-    const { favorites } = data;
-
-    const findFavorite = favorites.products.find(
-      favoriteProduct => favoriteProduct.name === product.name,
+  const getFavorites = async (
+    page: number,
+    queryFilter: string,
+    sortBy: string,
+  ): Promise<number> => {
+    const { user } = data;
+    const response = await favoritesApi.getFavorites(
+      user.uuid,
+      page,
+      queryFilter,
+      sortBy,
     );
 
-    if (findFavorite) {
-      toast.error('Favorite already include');
+    setFavorites(response.favorites);
 
-      return;
+    return response.totalCount;
+  };
+
+  const setUserFavorites = async (product: Product, filters: Filter[]) => {
+    const { user } = data;
+
+    if (Object.keys(favorites).length !== 0) {
+      if (favorites?.products?.find((p: Product) => p.name === product.name)) {
+        return;
+      }
+
+      setFavorites({
+        ...favorites,
+        products: [...favorites.products, product],
+        filters: filters.filter(
+          filter =>
+            !favorites.filters.map(favoriteFilter =>
+              favoriteFilter.name === filter.name
+                ? [...favorites.filters, filter]
+                : favorites.filters,
+            ),
+        ),
+      });
+    } else {
+      setFavorites({
+        userUuid: user.uuid,
+        products: [product],
+        filters,
+      });
     }
 
-    const updatedFavorites = favorites;
-
-    updatedFavorites.products.push(product);
-
-    filters.map(
-      (filter: Filter) =>
-        !updatedFavorites.filters.find(
-          favoriteFilter => favoriteFilter.name === filter.name,
-        ) && updatedFavorites.filters.push(filter),
-    );
-
-    localStorage.setItem(
-      '@growthHackers:favorites',
-      JSON.stringify(updatedFavorites),
-    );
-
-    setData({
-      ...data,
-      favorites: updatedFavorites,
+    toast.success('Favorite added.');
+    await favoritesApi.createFavorite({
+      userUuid: user.uuid,
+      products: [product],
+      filters,
     });
-
-    toast.success('Favorite added');
   };
 
   return (
@@ -179,9 +182,10 @@ const AuthProvider: React.FC = ({ children }) => {
         signIn,
         signUp,
         signOut,
-        setFavorites,
+        setUserFavorites,
+        getFavorites,
         removeFavorite,
-        favorites: data.favorites,
+        favorites,
         configs: data.configs,
         setConfigs,
       }}

@@ -30,8 +30,14 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-  const { user, favorites, setFavorites, removeFavorite, configs, setConfigs } =
-    useApp();
+  const {
+    user,
+    favorites,
+    setUserFavorites,
+    removeFavorite,
+    configs,
+    setConfigs,
+  } = useApp();
   const history = useHistory();
   const [products, setProducts] = useState<Product[]>([]);
   const { onOpen } = useSidebarDrawer();
@@ -140,7 +146,7 @@ export default function Products() {
             </Select>
             <SimpleGrid columns={3} spacing={20}>
               {products &&
-                products.map((product, i) => (
+                products.map((product: Product, i) => (
                   <Box
                     key={i}
                     transition="all 0.25s ease"
@@ -182,28 +188,11 @@ export default function Products() {
                           <MdFavoriteBorder
                             onClick={() =>
                               user
-                                ? setFavorites(product, filters)
+                                ? setUserFavorites(product, filters)
                                 : history.push('/signIn')
                             }
                           />
                         )}
-                        {/* <Icon
-                          onClick={() =>
-                            user
-                              ? setFavorites(product, filters)
-                              : history.push('/signIn')
-                          }
-                          as={
-                            isFavorite(product) ? (
-                              <MdFavorite />
-                            ) : (
-                              <MdFavoriteBorder />
-                            )
-                          }
-                          w={5}
-                          h={5}
-                          color="with"
-                        /> */}
                       </Box>
 
                       <Box

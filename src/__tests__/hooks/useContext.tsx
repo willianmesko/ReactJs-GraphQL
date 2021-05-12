@@ -17,13 +17,15 @@ jest.mock('react-router', () => {
 
 describe('App Hook', () => {
   it('should be able to sign in', async () => {
-    const apiResponse = {
-      uuid: 'b687d939-0be6-4714-b9c0-92f2ae70fee9',
-      name: 'User',
-      email: 'user@example.com',
-      password: '123456',
-    };
-    apiMock.onPost('/session').reply(200, apiResponse);
+    const apiResponse = [
+      {
+        uuid: 'b687d939-0be6-4714-b9c0-92f2ae70fee9',
+        name: 'User',
+        email: 'user@example.com',
+        password: '123456',
+      },
+    ];
+    apiMock.onGet('/userData').reply(200, apiResponse);
     const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
     const { result, waitForNextUpdate } = renderHook(() => useApp(), {
       wrapper: AppProvider,
@@ -37,7 +39,7 @@ describe('App Hook', () => {
     await waitForNextUpdate({ timeout: 3000 });
     expect(setItemSpy).toHaveBeenCalledWith(
       '@growthHackers:user',
-      JSON.stringify(apiResponse),
+      JSON.stringify(apiResponse[0]),
     );
     expect(result.current.user.email).toEqual('user@example.com');
   });
@@ -112,7 +114,7 @@ describe('App Hook', () => {
       result.current.signOut();
     });
 
-    expect(removeItemSpy).toHaveBeenCalledTimes(3);
+    expect(removeItemSpy).toHaveBeenCalledTimes(2);
     expect(result.current.user).toBeUndefined();
   });
 });

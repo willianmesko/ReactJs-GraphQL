@@ -7,14 +7,14 @@ import Home from '../pages/Home';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SingUp';
 import Products from '../pages/Products';
-import Favorites from '../pages/Favorites';
+import FavoritesPage from '../pages/Favorites';
 
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Home} />
     <Route path="/signIn" exact component={SignIn} />
     <Route path="/signUp" exact component={SignUp} />
-    <Route isPrivate path="/favorites" exact component={Favorites} />
+    <Route isPrivate path="/favorites" exact component={FavoritesPage} />
     <Route path="/products/:department" exact component={Products} />
   </Switch>
 );

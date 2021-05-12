@@ -1,6 +1,8 @@
 import { Product } from '../interfaces/Product.interface';
 import axios from './api';
-
+import {filterData} from '../utils/filter';
+import {sortData} from '../utils/sort';
+import {paginationHelper} from '../utils/pagination';
 interface GetProductsResponse {
   products: Product[];
   filters: any;
@@ -9,23 +11,28 @@ interface GetProductsResponse {
 export const productsApi = {
   getProducts: async (
     department: string,
-    page: number,
+    page: number = 1,
     queryFilter?: string,
-    orderBy?: string,
+    sortBy?: string,
   ): Promise<GetProductsResponse> => {
     try {
-      const { data, headers } = await axios.get(`products/${department}`, {
-        params: {
-          page,
-          queryFilter,
-          orderBy,
-        },
-      });
+      const { data } = await axios.get(`${department}`);
+      let products = data.data
 
-      const totalCount = Number(headers['x-total-count']);
+      const totalCount = products.length;
+      if(queryFilter) {
+        page = 1;
+        products = filterData(products, queryFilter);
+      }
+
+      if(sortBy) {
+        products = sortData(products, sortBy);
+      }
+
+      products = paginationHelper(products, page, 3)
 
       return {
-        products: data.products,
+        products,
         filters: data.filters,
         totalCount,
       };
