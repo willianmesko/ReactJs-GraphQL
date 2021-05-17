@@ -1,7 +1,8 @@
 
 
 Using graphql <br>
- backend in NestJs with graphql and mongo https://github.com/willianmesko/Nestjs-Graphql-api <br>
+ Backend in NestJs with graphql and mongo https://github.com/willianmesko/Nestjs-Graphql-api <br>
+ Run docker-compose up to start backend
 
 
 
