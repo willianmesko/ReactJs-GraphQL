@@ -1,7 +1,7 @@
 
 
 Using graphql <br>
-A backend in NestJs with graphql https://github.com/willianmesko/Nestjs-Graphql-api <br>
+ backend in NestJs with graphql and mongo https://github.com/willianmesko/Nestjs-Graphql-api <br>
 
 
 
