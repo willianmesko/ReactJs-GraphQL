@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import AppProvider from '../../hooks';
-import { useApp } from '../../hooks/useContext';
+import { useAuth } from '../../hooks/useAuth';
 import MockAdapter from 'axios-mock-adapter';
 import api from '../../services/api';
 
@@ -27,7 +27,7 @@ describe('App Hook', () => {
     ];
     apiMock.onGet('/userData').reply(200, apiResponse);
     const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
-    const { result, waitForNextUpdate } = renderHook(() => useApp(), {
+    const { result, waitForNextUpdate } = renderHook(() => useAuth(), {
       wrapper: AppProvider,
     });
 
@@ -73,7 +73,7 @@ describe('App Hook', () => {
       }
     });
 
-    const { result } = renderHook(() => useApp(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AppProvider,
     });
 
@@ -106,7 +106,7 @@ describe('App Hook', () => {
 
     const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
 
-    const { result } = renderHook(() => useApp(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AppProvider,
     });
 

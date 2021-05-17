@@ -1,5 +1,3 @@
-import { Attributes } from './Attributes.interface';
-
 export interface Product {
   id: number;
   name: string;
@@ -7,5 +5,8 @@ export interface Product {
   reviewCount: number;
   rating: number;
   imageUrl: string;
-  attributes: Attributes[];
+  inch?: number;
+  resolution?: string;
+  condition?: string;
+  memory?: string;
 }

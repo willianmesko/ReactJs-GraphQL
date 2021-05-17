@@ -10,10 +10,9 @@ export default function Home() {
     <>
       <Header />
       <Flex w="100vw" h="80vh" align="center" justify="center">
-        <SimpleGrid columns={3} spacing={20}>
+        <SimpleGrid columns={2} spacing={20}>
           <DepartmentBlock name="Televisions" image={TelevisionImage} />
           <DepartmentBlock name="Games" image={GamesImage} />
-          <DepartmentBlock name="CellPhones" image={CellPhone} />
         </SimpleGrid>
       </Flex>
     </>

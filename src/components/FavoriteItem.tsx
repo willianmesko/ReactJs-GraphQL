@@ -8,7 +8,7 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { Product } from '../interfaces/Product.interface';
-import { useApp } from '../hooks/useContext';
+import { useFavorite } from '../hooks/useFavorites';
 import { useState } from 'react';
 
 interface FavoriteItemProps {
@@ -21,7 +21,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 });
 
 export function FavoriteItem({ products }: FavoriteItemProps) {
-  const { removeFavorite } = useApp();
+  const { removeFavorite } = useFavorite();
   const [isRemovingFavorite, setIsremovingFavorite] = useState(false);
 
   return (

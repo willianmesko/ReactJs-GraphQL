@@ -1,3 +1,4 @@
+import { QueryLazyOptions } from '@apollo/client';
 import { Stack, Text } from '@chakra-ui/react';
 import { PaginationItem } from './PaginationItem';
 
@@ -6,6 +7,7 @@ interface PaginationProps {
   registerPerPage?: number;
   currentPage?: number;
   reference: string;
+  handlePage(options: QueryLazyOptions<any>): void;
 }
 
 const siblingsCount = 1;
@@ -21,6 +23,7 @@ export function Pagination({
   registerPerPage = 3,
   currentPage = 1,
   reference,
+  handlePage,
 }: PaginationProps) {
   const lastPage = Math.floor(totalCountOfRegister / registerPerPage);
 
@@ -42,25 +45,48 @@ export function Pagination({
       <Stack direction="row" mt="8" justify="space-between" align="center">
         {currentPage > 1 + siblingsCount && (
           <>
-            <PaginationItem reference={reference} number={1} />
+            <PaginationItem
+              handlePage={handlePage}
+              reference={reference}
+              number={1}
+            />
             {currentPage > (2 + siblingsCount && <Text>...</Text>)}
           </>
         )}
         {previousPage.length > 0 &&
           previousPage.map(page => (
-            <PaginationItem reference={reference} key={page} number={page} />
+            <PaginationItem
+              handlePage={handlePage}
+              reference={reference}
+              key={page}
+              number={page}
+            />
           ))}
 
-        <PaginationItem reference={reference} number={currentPage} isCurrent />
+        <PaginationItem
+          handlePage={handlePage}
+          reference={reference}
+          number={currentPage}
+          isCurrent
+        />
 
         {nextPages.length > 0 &&
           nextPages.map(page => (
-            <PaginationItem reference={reference} key={page} number={page} />
+            <PaginationItem
+              handlePage={handlePage}
+              reference={reference}
+              key={page}
+              number={page}
+            />
           ))}
 
         {currentPage + siblingsCount < lastPage && (
           <>
-            <PaginationItem reference={reference} number={lastPage} />
+            <PaginationItem
+              handlePage={handlePage}
+              reference={reference}
+              number={lastPage}
+            />
             {currentPage + 1 + siblingsCount < lastPage && <Text>...</Text>}
           </>
         )}

@@ -5,8 +5,6 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import { useApp } from '../hooks/useContext';
-
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
   component: React.ComponentType;

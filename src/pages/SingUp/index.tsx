@@ -1,10 +1,12 @@
+import { useHistory } from 'react-router';
 import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '../../components/Form/Input';
-import { useApp } from '../../hooks/useContext';
-
+import { useMutation } from '@apollo/client';
+import { CREATE_USER } from '../../GraphQL/user.mutations';
+import { toast } from 'react-toastify';
 type SignUpFormData = {
   name: string;
   email: string;
@@ -21,9 +23,15 @@ export default function SignUp() {
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signUpFormSchema),
   });
-
-  const { signUp } = useApp();
-
+  const [createUser] = useMutation(CREATE_USER, {
+    onError() {
+      toast.error('Account already exist');
+    },
+    onCompleted() {
+      history.push('/signin');
+    },
+  });
+  const history = useHistory();
   const handleSingUp: SubmitHandler<SignUpFormData> = async ({
     name,
     email,
@@ -31,10 +39,14 @@ export default function SignUp() {
   }) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    await signUp({
-      name,
-      email,
-      password,
+    createUser({
+      variables: {
+        data: {
+          email,
+          password,
+          name,
+        },
+      },
     });
   };
 

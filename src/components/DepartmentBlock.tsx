@@ -21,8 +21,8 @@ export function DepartmentBlock({ name, image }: FavoritesBlockProps) {
           transform: 'scale(1.05)',
           border: '3px solid #12ac8e',
         }}
-        h="40vh"
-        w="25vw"
+        h="50vh"
+        w="30vw"
       >
         <Image alt={name} w="100%" h="100%" src={image} />
       </Box>

@@ -6,24 +6,22 @@ import {
   SimpleGrid,
   Image,
   Badge,
-  Icon,
-  IconButton,
+  Text,
   Skeleton,
+  Button,
   Select,
-  Spinner,
 } from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
-import { IoFilterSharp } from 'react-icons/io5';
+import { Input } from '../../components/Form/Input';
 import { Header } from '../../components/Header';
-import { productsApi } from '../../services/products.service';
 import { Product } from '../../interfaces/Product.interface';
-import { useApp } from '../../hooks/useContext';
+import { useAuth } from '../../hooks/useAuth';
 import { Pagination } from '../../components/Pagination';
-import { FilterBar } from '../../components/FilterBar/FilterBar';
-import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
-import { Filter } from '../../interfaces/Filters.interface';
-import { SortOptionsEnum } from '../../utils/sort';
+import { useLazyQuery } from '@apollo/client';
+import { LOAD_GAMES } from '../../GraphQL/game.queries';
+import { LOAD_TELEVISIONS } from '../../GraphQL/television.queries';
+import { useFavorite } from '../../hooks/useFavorites';
 
 interface RouteParams {
   department: string;
@@ -31,63 +29,65 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-  const {
-    user,
-    favorites,
-    setUserFavorites,
-    removeFavorite,
-    configs,
-    setConfigs,
-  } = useApp();
+  const { user, configs } = useAuth();
+  const { favorites } = useFavorite();
+  const { setUserFavorites } = useFavorite();
   const history = useHistory();
-  const [products, setProducts] = useState<Product[]>([]);
-  const { onOpen } = useSidebarDrawer();
-  const [totalCountOfRegister, setTotalCountOfRegistes] = useState<number>(0);
-  const [filters, setFilters] = useState<Filter[]>([]);
-  const [isLoading, setLoading] = useState(false);
-  const [isSettingFavorite, setIsSettingFavorite] = useState(false);
+  const [products, setProducts] = useState<Product[]>();
+  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+  const [searchField, setSearchField] = useState<string>();
+  const [searchValue, setSearchValue] = useState<string>();
+  const [searchSort, setSearchSort] = useState<string>();
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [executeSearch, { loading }] = useLazyQuery(
+    department === 'televisions' ? LOAD_TELEVISIONS : LOAD_GAMES,
+    {
+      onCompleted(response) {
+        setProducts(response[department].data);
+
+        setTotalCount(response[department].totalCount);
+        const productList: string[] = [];
+
+        response[department].data.map((product: Product[]) =>
+          Object.keys(product).filter(prod =>
+            prod !== 'id' &&
+            prod !== 'imageUrl' &&
+            prod !== '__typename' &&
+            !productList.includes(prod)
+              ? productList.push(prod)
+              : '',
+          ),
+        );
+
+        setSearchFieldOptions(productList);
+      },
+    },
+  );
+
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
 
   const isFavorite = (item: Product) => {
-    return favorites?.products?.find(product => item.name === product.name);
+    return true;
+    return favorites?.find(favorite => item.name === favorite.name);
   };
 
-  const setFavorites = async (product: Product, filter: Filter[]) => {
-    setIsSettingFavorite(true);
-    await setUserFavorites(product, filter);
-    setIsSettingFavorite(false);
-  };
-
-  async function getProducts(): Promise<void> {
-    setLoading(true);
-    const response = await productsApi.getProducts(
-      department,
-      configs?.productCurrentPage,
-      configs?.productsQueryFilter,
-      configs?.productsOrder,
-    );
-
-    setProducts(response.products);
-    setFilters(response.filters);
-    setTotalCountOfRegistes(response.totalCount);
-    setLoading(false);
-  }
   useEffect(() => {
-    getProducts();
-  }, [
-    configs?.productCurrentPage,
-    configs?.productsQueryFilter,
-    configs?.productsOrder,
-  ]);
-
+    executeSearch({
+      variables: {
+        field: setSearchField,
+        value: setSearchValue,
+        page: configs?.productCurrentPage,
+      },
+    });
+  }, []);
   return (
     <>
       <Header />
-      {<Flex w="100vw" mt="10" align="center" justify="center"></Flex>}
-      {isLoading ? (
+
+      {loading ? (
         <Flex w="100vw" mt="10" align="center" justify="center">
           <Skeleton
             w="300px"
@@ -113,16 +113,6 @@ export default function Products() {
         </Flex>
       ) : (
         <Flex>
-          <IconButton
-            aria-label="Open Filters"
-            icon={<Icon as={IoFilterSharp} />}
-            fontSize="30"
-            variant="unstyled"
-            onClick={onOpen}
-            ml="10"
-          />
-
-          <FilterBar reference="products" filters={filters} />
           <Flex
             w="100vw"
             mt="10"
@@ -130,42 +120,64 @@ export default function Products() {
             justify="center"
             flexDirection="column"
           >
-            {isSettingFavorite && (
-              <Spinner
-                position="absolute"
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="green.800"
-                size="xl"
+            <Flex w="80vw" align="center" justifyContent="space-between">
+              <Input
+                name="value"
+                type="value"
+                mb="10px"
+                mr="10px"
+                h="40px"
+                isDisabled={!searchField}
+                value={searchValue}
+                placeholder="Find a favorite"
+                onChange={e => setSearchValue(e.target.value)}
               />
-            )}
+              <Select
+                ml="10px"
+                w="200px"
+                mb="10px"
+                placeholder="Field"
+                value={searchField}
+                onChange={e => setSearchField(e.target.value)}
+              >
+                {searchFieldOptions &&
+                  searchFieldOptions.map(option => (
+                    <option value={option}>{option.toUpperCase()}</option>
+                  ))}
+              </Select>
 
-            <Select
-              w="200px"
-              mr="60px"
-              mb="10px"
-              alignSelf="flex-end"
-              placeholder="Sort by"
-              value={configs?.productsOrder}
-              onChange={e =>
-                setConfigs({
-                  ...configs,
-                  productCurrentPage: 1,
-                  productsOrder: e.target.value,
-                })
-              }
-            >
-              <option value={SortOptionsEnum.LOWERPRICE}>
-                Price: Low to High
-              </option>
-              <option value={SortOptionsEnum.HIGHERPRICE}>
-                Price: High to Low
-              </option>
-            </Select>
+              <Select
+                ml="10px"
+                mb="10px"
+                w="200px"
+                placeholder="Sort"
+                value={searchSort}
+                onChange={e => setSearchSort(e.target.value)}
+              >
+                <option value="ASC">ASC</option>
+                <option value="DESC">DESC</option>
+              </Select>
+
+              <Button
+                ml="10px"
+                mb="10px"
+                width="100px"
+                onClick={() =>
+                  executeSearch({
+                    variables: {
+                      field: searchField,
+                      value: searchValue,
+                      sort: searchSort,
+                    },
+                  })
+                }
+              >
+                Search
+              </Button>
+            </Flex>
             <SimpleGrid columns={3} spacing={20}>
-              {products &&
-                products.map((product: Product, i) => (
+              {products && products.length > 0 ? (
+                products.map((product: Product, i: number) => (
                   <Box
                     key={i}
                     transition="all 0.25s ease"
@@ -199,9 +211,7 @@ export default function Products() {
                           <MdFavorite
                             onClick={async () =>
                               user
-                                ? (setIsSettingFavorite(true),
-                                  await removeFavorite(product),
-                                  setIsSettingFavorite(false))
+                                ? setUserFavorites(product)
                                 : history.push('/signIn')
                             }
                           />
@@ -209,7 +219,7 @@ export default function Products() {
                           <MdFavoriteBorder
                             onClick={() =>
                               user
-                                ? setFavorites(product, filters)
+                                ? setUserFavorites(product)
                                 : history.push('/signIn')
                             }
                           />
@@ -245,15 +255,20 @@ export default function Products() {
                       </Box>
                     </Box>
                   </Box>
-                ))}
+                ))
+              ) : (
+                <Flex w="100vw" justifyContent="center">
+                  <Text fontSize="3xl">Product not Found</Text>
+                </Flex>
+              )}
             </SimpleGrid>
-            {products.length >= 3 && (
-              <Pagination
-                reference="products"
-                totalCountOfRegister={totalCountOfRegister}
-                currentPage={configs?.productCurrentPage}
-              />
-            )}
+
+            <Pagination
+              reference="products"
+              handlePage={executeSearch}
+              totalCountOfRegister={totalCount}
+              currentPage={configs?.productCurrentPage}
+            />
           </Flex>
         </Flex>
       )}

@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '../../components/Form/Input';
-import { useApp } from '../../hooks/useContext';
+import { useAuth } from '../../hooks/useAuth';
 
 type SignInFormData = {
   email: string;
@@ -21,7 +21,7 @@ export default function SignIn() {
     resolver: yupResolver(signInFormSchema),
   });
 
-  const { signIn } = useApp();
+  const { signIn } = useAuth();
   const history = useHistory();
 
   const handleSignIn: SubmitHandler<SignInFormData> = async ({
@@ -33,8 +33,6 @@ export default function SignIn() {
       email,
       password,
     });
-
-    history.push('/');
   };
 
   const { errors } = formState;

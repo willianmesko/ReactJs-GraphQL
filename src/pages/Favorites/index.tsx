@@ -1,94 +1,121 @@
 import { useEffect, useState } from 'react';
-import {
-  Flex,
-  Select,
-  IconButton,
-  Icon,
-  Skeleton,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
-import { IoFilterSharp } from 'react-icons/io5';
+import { Flex, Select, Skeleton, Stack, Button } from '@chakra-ui/react';
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
-import { useApp } from '../../hooks/useContext';
-import { FilterBar } from '../../components/FilterBar/FilterBar';
-import { useSidebarDrawer } from '../../hooks/sideBarDrawerContext';
-import { SortOptionsEnum } from '../../utils/sort';
+import { useAuth } from '../../hooks/useAuth';
 import { FavoriteItem } from '../../components/FavoriteItem';
-
+import { useLazyQuery } from '@apollo/client';
+import { LOAD_FAVORITES } from '../../GraphQL/favorite.queries';
+import { useFavorite } from '../../hooks/useFavorites';
+import { Input } from '../../components/Form/Input';
+import { Product } from '../../interfaces/Product.interface';
 export default function FavoritesPage() {
-  const { configs, setConfigs, getFavorites, favorites } = useApp();
-  const [isLoading, setLoading] = useState(false);
-  const { onOpen } = useSidebarDrawer();
-  const [totalCountOfRegister, setTotalCountOfRegister] = useState<number>(0);
+  const { configs } = useAuth();
+  const {
+    favorites,
+    setFavorites,
+    favoritesTotalCount,
+    setFavoritesTotalCount,
+  } = useFavorite();
 
-  const filtredBy = (queryFilter: string) => {
-    const [type, value] = queryFilter.split('?');
-    return `${type.toUpperCase()} ${value.toUpperCase()}`;
-  };
+  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+  const [searchField, setSearchField] = useState<string>();
+  const [searchValue, setSearchValue] = useState<string>();
+  const [searchSort, setSearchSort] = useState<string>();
 
-  async function awaitGetFavorites() {
-    setLoading(true);
+  const [executeSearch, { loading }] = useLazyQuery(LOAD_FAVORITES, {
+    onCompleted(favoritesData) {
+      setFavorites(favoritesData.favorites.data);
 
-    const totalAccount = await getFavorites(
-      configs.favoritesCurrentPage,
-      configs.favoritesQueryFilter,
-      configs.favoritesOrder,
-    );
-    setTotalCountOfRegister(totalAccount);
-    setLoading(false);
-  }
+      setFavoritesTotalCount(favoritesData.favorites.totalCount);
+      const favoriteList: string[] = [];
+
+      favoritesData.favorites.data.map((favorite: Product[]) =>
+        Object.keys(favorite).filter(fav =>
+          fav !== 'id' &&
+          fav !== 'imageUrl' &&
+          fav !== '__typename' &&
+          !favoriteList.includes(fav)
+            ? favoriteList.push(fav)
+            : '',
+        ),
+      );
+
+      setSearchFieldOptions(favoriteList);
+    },
+  });
 
   useEffect(() => {
-    awaitGetFavorites();
-  }, [
-    configs.favoritesCurrentPage,
-    configs.favoritesQueryFilter,
-    configs.favoritesOrder,
-  ]);
+    executeSearch({
+      variables: {
+        field: setSearchField,
+        value: setSearchValue,
+        page: configs?.favoritesCurrentPage,
+      },
+    });
+  }, []);
 
   return (
     <>
       <Header />
 
-      {favorites && favorites.products && favorites.products.length >= 0 && (
-        <>
-          <IconButton
-            aria-label="Open Filters"
-            icon={<Icon as={IoFilterSharp} />}
-            fontSize="30"
-            variant="unstyled"
-            onClick={onOpen}
-            ml="10"
-          />
-
-          <FilterBar reference="favorites" filters={favorites.filters} />
-        </>
-      )}
-
       <Flex w="100vw" align="center" justify="center" mt="5" flexDir="column">
-        <Select
-          w="200px"
-          mr="60px"
-          mb="10px"
-          alignSelf="flex-end"
-          placeholder="Sort by"
-          value={configs?.favoritesOrder}
-          onChange={e =>
-            setConfigs({
-              ...configs,
-              favoritesCurrentPage: 1,
-              favoritesOrder: e.target.value,
-            })
-          }
-        >
-          <option value={SortOptionsEnum.LOWERPRICE}>Price: Low to High</option>
-          <option value={SortOptionsEnum.HIGHERPRICE}>
-            Price: High to Low
-          </option>
-        </Select>
-        {isLoading && (
+        <Flex w="80vw" align="center" justifyContent="space-between">
+          <Input
+            name="value"
+            type="value"
+            mb="10px"
+            mr="10px"
+            h="40px"
+            isDisabled={!searchField}
+            value={searchValue}
+            placeholder="Find a favorite"
+            onChange={e => setSearchValue(e.target.value)}
+          />
+          <Select
+            ml="10px"
+            w="200px"
+            mb="10px"
+            placeholder="Field"
+            value={searchField}
+            onChange={e => setSearchField(e.target.value)}
+          >
+            {searchFieldOptions &&
+              searchFieldOptions.map(option => (
+                <option value={option}>{option.toUpperCase()}</option>
+              ))}
+          </Select>
+
+          <Select
+            ml="10px"
+            mb="10px"
+            w="200px"
+            placeholder="Sort"
+            value={searchSort}
+            onChange={e => setSearchSort(e.target.value)}
+          >
+            <option value="ASC">ASC</option>
+            <option value="DESC">DESC</option>
+          </Select>
+
+          <Button
+            ml="10px"
+            mb="10px"
+            width="100px"
+            onClick={() =>
+              executeSearch({
+                variables: {
+                  field: `data.${searchField}`,
+                  value: searchValue,
+                  sort: searchSort,
+                },
+              })
+            }
+          >
+            Search
+          </Button>
+        </Flex>
+        {loading && (
           <Stack>
             <Skeleton
               h="200px"
@@ -116,31 +143,19 @@ export default function FavoritesPage() {
             />
           </Stack>
         )}
-        {!isLoading && (
+        {favorites && favorites?.length === 0 ? (
+          <h1>No favorite found</h1>
+        ) : (
           <>
-            {configs?.favoritesQueryFilter && (
-              <Text fontWeight="bold" fontSize="3xl">
-                {filtredBy(configs?.favoritesQueryFilter)}
-              </Text>
-            )}
-            {favorites &&
-            favorites.products &&
-            favorites?.products?.length === 0 ? (
-              <h1>No favorite found</h1>
-            ) : (
-              <>
-                <FavoriteItem products={favorites?.products} />
-              </>
-            )}
+            <FavoriteItem products={favorites} />
           </>
         )}
-        {favorites && favorites.products && favorites?.products.length >= 3 && (
-          <Pagination
-            reference="favorites"
-            totalCountOfRegister={totalCountOfRegister}
-            currentPage={configs?.favoritesCurrentPage}
-          />
-        )}
+        <Pagination
+          reference="favorites"
+          handlePage={executeSearch}
+          totalCountOfRegister={favoritesTotalCount}
+          currentPage={configs?.favoritesCurrentPage}
+        />
       </Flex>
     </>
   );

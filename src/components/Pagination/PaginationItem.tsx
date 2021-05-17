@@ -1,18 +1,21 @@
+import { QueryLazyOptions } from '@apollo/client';
 import { Button } from '@chakra-ui/react';
-import { useApp } from '../../hooks/useContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface PaginationItemProps {
   number: number;
   isCurrent?: boolean;
   reference: string;
+  handlePage(options: QueryLazyOptions<any>): void;
 }
 
 export function PaginationItem({
   isCurrent = false,
   number,
   reference,
+  handlePage,
 }: PaginationItemProps) {
-  const { setConfigs, configs } = useApp();
+  const { setConfigs, configs } = useAuth();
   if (isCurrent) {
     return (
       <Button
@@ -41,15 +44,24 @@ export function PaginationItem({
       _disabled={{
         bgColor: 'gray:500',
       }}
-      onClick={() =>
-        setConfigs({
-          ...configs,
-          favoritesCurrentPage:
-            reference === 'favorites' ? number : configs?.favoritesCurrentPage,
-          productCurrentPage:
-            reference === 'products' ? number : configs?.productCurrentPage,
-        })
-      }
+      onClick={() => {
+        return (
+          setConfigs({
+            ...configs,
+            favoritesCurrentPage:
+              reference === 'favorites'
+                ? number
+                : configs?.favoritesCurrentPage,
+            productCurrentPage:
+              reference === 'products' ? number : configs?.productCurrentPage,
+          }),
+          handlePage({
+            variables: {
+              page: number,
+            },
+          })
+        );
+      }}
     >
       {number}
     </Button>

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { AuthProvider } from './useContext';
-import { SideBarDrawerProvider } from './sideBarDrawerContext';
+import { AuthProvider } from './useAuth';
+import { FavoritesProvider } from './useFavorites';
 
 const AppProvider: React.FC = ({ children }) => (
   <AuthProvider>
-    <SideBarDrawerProvider>{children}</SideBarDrawerProvider>
+    <FavoritesProvider>{children}</FavoritesProvider>
   </AuthProvider>
 );
 

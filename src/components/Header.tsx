@@ -7,12 +7,12 @@ import {
   ListItem,
   UnorderedList,
 } from '@chakra-ui/react';
-import { useApp } from '../hooks/useContext';
+import { useAuth } from '../hooks/useAuth';
 
 export function Header() {
   const history = useHistory();
   const location = useLocation();
-  const { user, signOut } = useApp();
+  const { user, signOut } = useAuth();
 
   return (
     <>
