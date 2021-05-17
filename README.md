@@ -10,9 +10,13 @@ Test all components, hooks, and pages.  <br>
 Separate hooks in contexts such as favorites, users, products.  <br>
 UI/UX.  <br>
  
- ![chrome-capture](https://user-images.githubusercontent.com/26778884/117824584-fd2c6f00-b244-11eb-8962-7c6d3fb7331f.gif)
-![chrome-capture (1)](https://user-images.githubusercontent.com/26778884/117824569-f998e800-b244-11eb-8c42-abc4f74c4eec.gif)
-![chrome-capture (2)](https://user-images.githubusercontent.com/26778884/117824613-03225000-b245-11eb-8ac4-3180c4403276.gif)
+<img width="1227" alt="Screen Shot 2021-05-16 at 22 29 37" src="https://user-images.githubusercontent.com/26778884/118421054-a4226800-b696-11eb-97a8-6694e9e6e639.png">
+<img width="1212" alt="Screen Shot 2021-05-16 at 22 30 04" src="https://user-images.githubusercontent.com/26778884/118421057-a684c200-b696-11eb-8c9b-95b3a4651093.png">
+<img width="1228" alt="Screen Shot 2021-05-16 at 22 30 30" src="https://user-images.githubusercontent.com/26778884/118421060-a97fb280-b696-11eb-9d04-b77396bc5171.png">
+<img width="905" alt="Screen Shot 2021-05-16 at 22 30 58" src="https://user-images.githubusercontent.com/26778884/118421068-b00e2a00-b696-11eb-831b-281cfc0a4b08.png">
+<img width="147" alt="Screen Shot 2021-05-16 at 22 31 10" src="https://user-images.githubusercontent.com/26778884/118421069-b0a6c080-b696-11eb-862d-c2f7ade0c17b.png">
+<img width="1134" alt="Screen Shot 2021-05-16 at 22 31 25" src="https://user-images.githubusercontent.com/26778884/118421070-b0a6c080-b696-11eb-9f0a-eb2067c81d48.png">
+
 
 
 
