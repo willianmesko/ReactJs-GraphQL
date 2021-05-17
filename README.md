@@ -1,6 +1,7 @@
 
-Using graphql <br>
-Backend in NestJs GraphQL and mongo. https://github.com/willianmesko/growthhacker-backend <br>
+
+Using graphql
+A backend in NestJs with grap https://github.com/willianmesko/Nestjs-Graphql-api <br>
 
 
 
