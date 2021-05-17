@@ -1,7 +1,7 @@
 
 
-Using graphql
-A backend in NestJs with grap https://github.com/willianmesko/Nestjs-Graphql-api <br>
+Using graphql <br>
+A backend in NestJs with graphql https://github.com/willianmesko/Nestjs-Graphql-api <br>
 
 
 
