@@ -1,9 +1,9 @@
-import { OperationVariables, QueryLazyOptions, useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { OperationVariables, QueryLazyOptions, useLazyQuery} from '@apollo/client';
 import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
 
 import { Product } from '../interfaces/Product.interface';
-import { useAuth } from './useAuth';
+
 
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 interface ProductsContextData {
@@ -55,6 +55,7 @@ const ProductsProvider: React.FC = ({ children }) => {
     executeSearch({
       variables: {
         department, 
+        
       }
     })
   }

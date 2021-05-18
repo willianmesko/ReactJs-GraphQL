@@ -44,7 +44,7 @@ export default function Products() {
   });
 
   const isFavorite = (item: Product) => {
-    return true;
+    console.log(favorites)
     return favorites?.find(favorite => item.name === favorite.name);
   };
 

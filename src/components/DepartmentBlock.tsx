@@ -19,7 +19,7 @@ export function DepartmentBlock({ name, image }: FavoritesBlockProps) {
         _hover={{
           cursor: 'pointer',
           transform: 'scale(1.05)',
-          border: '3px solid #12ac8e',
+          border: '3px solid #D53F8C',
         }}
         h="50vh"
         w="30vw"

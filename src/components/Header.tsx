@@ -37,7 +37,7 @@ export function Header() {
           }}
           onClick={() => history.push('/')}
         >
-          GrowthHackers
+          GraphQL
         </Text>
 
         {user ? (
@@ -55,10 +55,10 @@ export function Header() {
           <ButtonGroup>
             <Button
               onClick={() => history.push('/signUp')}
-              color="with"
+              color="#000"
               borderRadius="30px"
               w="100px"
-              colorScheme="yellow"
+             bg="pink.300"
               mt="6"
             >
               Join Us
@@ -67,8 +67,8 @@ export function Header() {
               onClick={() => history.push('/signIn')}
               borderRadius="30px"
               w="100px"
-              color="with"
-              colorScheme="yellow"
+              bg="pink.300"
+              color="#000"
               mt="6"
             >
               Login
@@ -83,7 +83,7 @@ export function Header() {
         mx="auto"
         px="10"
         align="center"
-        bg="green.800"
+        bg="pink.500"
       >
         <UnorderedList
           fontSize="18"
@@ -92,12 +92,13 @@ export function Header() {
           listStyleType="none"
         >
           <ListItem
+          
             onClick={() => history.push('/')}
             _hover={{
-              color: 'white',
+              color: '#000',
               cursor: 'pointer',
             }}
-            color={location.pathname === '/' ? 'white' : 'current'}
+            color={location.pathname === '/' ? '#000' : 'white'}
             mr="5"
           >
             Departments
@@ -106,10 +107,10 @@ export function Header() {
             <ListItem
               onClick={() => history.push('/favorites')}
               _hover={{
-                color: 'white',
+                color: '#000',
                 cursor: 'pointer',
               }}
-              color={location.pathname === '/favorites' ? 'white' : 'current'}
+              color={location.pathname === '/favorites' ? '#000' : 'white'}
             >
               My Favorites
             </ListItem>

@@ -6,9 +6,12 @@ import {ProductsProvider} from './useProducts';
 
 const AppProvider: React.FC = ({ children }) => (
   <AuthProvider>
+    <FavoritesProvider>
     <ProductsProvider>
-    <FavoritesProvider>{children}</FavoritesProvider>
+    {children}
+    
     </ProductsProvider>
+    </FavoritesProvider>
   </AuthProvider>
 );
 

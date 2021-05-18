@@ -4,56 +4,27 @@ import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
 import { useAuth } from '../../hooks/useAuth';
 import { FavoriteItem } from '../../components/FavoriteItem';
-import { useLazyQuery } from '@apollo/client';
-import { LOAD_FAVORITES } from '../../GraphQL/favorite.queries';
 import { useFavorite } from '../../hooks/useFavorites';
 import { Input } from '../../components/Form/Input';
-import { Product } from '../../interfaces/Product.interface';
+
 export default function FavoritesPage() {
   const { configs } = useAuth();
   const {
     favorites,
-    setFavorites,
     favoritesTotalCount,
-    setFavoritesTotalCount,
+    getFavorites,
+    searchFieldOptions,
+    isLoading,
+    searchFavorite,
   } = useFavorite();
 
-  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+ 
   const [searchField, setSearchField] = useState<string>();
   const [searchValue, setSearchValue] = useState<string>();
   const [searchSort, setSearchSort] = useState<string>();
-  const [loading, setLoading] = useState(false)
-  // const [executeSearch, { loading }] = useLazyQuery(LOAD_FAVORITES, {
-  //   onCompleted(favoritesData) {
-  //     setFavorites(favoritesData.favorites.data);
+ 
 
-  //     setFavoritesTotalCount(favoritesData.favorites.totalCount);
-  //     const favoriteList: string[] = [];
-
-  //     favoritesData.favorites.data.map((favorite: Product[]) =>
-  //       Object.keys(favorite).filter(fav =>
-  //         fav !== 'id' &&
-  //         fav !== 'imageUrl' &&
-  //         fav !== '__typename' &&
-  //         !favoriteList.includes(fav)
-  //           ? favoriteList.push(fav)
-  //           : '',
-  //       ),
-  //     );
-
-  //     setSearchFieldOptions(favoriteList);
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   executeSearch({
-  //     variables: {
-  //       field: setSearchField,
-  //       value: setSearchValue,
-  //       page: configs?.favoritesCurrentPage,
-  //     },
-  //   });
-  // }, []);
+  useEffect(() => {getFavorites()}, [])
 
   return (
     <>
@@ -102,20 +73,20 @@ export default function FavoritesPage() {
             ml="10px"
             mb="10px"
             width="100px"
-            // onClick={() =>
-            //   executeSearch({
-            //     variables: {
-            //       field: `data.${searchField}`,
-            //       value: searchValue,
-            //       sort: searchSort,
-            //     },
-            //   })
-            // }
+            onClick={() =>
+              searchFavorite({
+                variables: {
+                  field: `data.${searchField}`,
+                  value: searchValue,
+                  sort: searchSort,
+                },
+              })
+            }
           >
             Search
           </Button>
         </Flex>
-        {false && (
+        {isLoading && (
           <Stack>
             <Skeleton
               h="200px"
@@ -153,7 +124,7 @@ export default function FavoritesPage() {
         <Pagination
           reference="favorites"
           handlePage={() => {}}
-          totalCountOfRegister={10}
+          totalCountOfRegister={favoritesTotalCount}
           currentPage={configs?.favoritesCurrentPage}
         />
       </Flex>

@@ -54,16 +54,7 @@ export default function SignUp() {
 
   return (
     <Flex w="100vw" h="100vh" align="center" justify="center" flexDir="column">
-      <Text
-        fontSize="4xl"
-        fontWeight="bold"
-        letterSpacing="tight"
-        w="64"
-        alignSelf="center"
-        mb="10"
-      >
-        GrowthHackers
-      </Text>
+     
       <Flex
         as="form"
         width="100%"
@@ -72,7 +63,7 @@ export default function SignUp() {
         maxH={600}
         p="8"
         border="1px solid"
-        borderColor="green.800"
+        borderColor="pink.500"
         borderRadius={8}
         flexDir="column"
         onSubmit={handleSubmit(handleSingUp)}
@@ -108,9 +99,10 @@ export default function SignUp() {
           />
         </Stack>
         <Button
-          bg="green.800"
+          bg="pink.500"
           type="submit"
           mt="6"
+          color="#000"
           isLoading={formState.isSubmitting}
         >
           Sign Up
