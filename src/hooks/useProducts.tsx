@@ -1,11 +1,10 @@
 import { OperationVariables, QueryLazyOptions, useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
-import { CREATE_FAVORITE } from '../GraphQL/favorite.mutation';
+
 import { Product } from '../interfaces/Product.interface';
 import { useAuth } from './useAuth';
-import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
-import { LOAD_TELEVISIONS } from '../GraphQL/television.queries';
+
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 interface ProductsContextData {
   getProducts(departament: string): void
@@ -53,7 +52,6 @@ const ProductsProvider: React.FC = ({ children }) => {
   });
   
  async function getProducts(department: string): Promise<void> {
-    console.log(department)
     executeSearch({
       variables: {
         department, 
