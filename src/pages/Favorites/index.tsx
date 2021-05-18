@@ -22,38 +22,38 @@ export default function FavoritesPage() {
   const [searchField, setSearchField] = useState<string>();
   const [searchValue, setSearchValue] = useState<string>();
   const [searchSort, setSearchSort] = useState<string>();
+  const [loading, setLoading] = useState(false)
+  // const [executeSearch, { loading }] = useLazyQuery(LOAD_FAVORITES, {
+  //   onCompleted(favoritesData) {
+  //     setFavorites(favoritesData.favorites.data);
 
-  const [executeSearch, { loading }] = useLazyQuery(LOAD_FAVORITES, {
-    onCompleted(favoritesData) {
-      setFavorites(favoritesData.favorites.data);
+  //     setFavoritesTotalCount(favoritesData.favorites.totalCount);
+  //     const favoriteList: string[] = [];
 
-      setFavoritesTotalCount(favoritesData.favorites.totalCount);
-      const favoriteList: string[] = [];
+  //     favoritesData.favorites.data.map((favorite: Product[]) =>
+  //       Object.keys(favorite).filter(fav =>
+  //         fav !== 'id' &&
+  //         fav !== 'imageUrl' &&
+  //         fav !== '__typename' &&
+  //         !favoriteList.includes(fav)
+  //           ? favoriteList.push(fav)
+  //           : '',
+  //       ),
+  //     );
 
-      favoritesData.favorites.data.map((favorite: Product[]) =>
-        Object.keys(favorite).filter(fav =>
-          fav !== 'id' &&
-          fav !== 'imageUrl' &&
-          fav !== '__typename' &&
-          !favoriteList.includes(fav)
-            ? favoriteList.push(fav)
-            : '',
-        ),
-      );
+  //     setSearchFieldOptions(favoriteList);
+  //   },
+  // });
 
-      setSearchFieldOptions(favoriteList);
-    },
-  });
-
-  useEffect(() => {
-    executeSearch({
-      variables: {
-        field: setSearchField,
-        value: setSearchValue,
-        page: configs?.favoritesCurrentPage,
-      },
-    });
-  }, []);
+  // useEffect(() => {
+  //   executeSearch({
+  //     variables: {
+  //       field: setSearchField,
+  //       value: setSearchValue,
+  //       page: configs?.favoritesCurrentPage,
+  //     },
+  //   });
+  // }, []);
 
   return (
     <>
@@ -102,20 +102,20 @@ export default function FavoritesPage() {
             ml="10px"
             mb="10px"
             width="100px"
-            onClick={() =>
-              executeSearch({
-                variables: {
-                  field: `data.${searchField}`,
-                  value: searchValue,
-                  sort: searchSort,
-                },
-              })
-            }
+            // onClick={() =>
+            //   executeSearch({
+            //     variables: {
+            //       field: `data.${searchField}`,
+            //       value: searchValue,
+            //       sort: searchSort,
+            //     },
+            //   })
+            // }
           >
             Search
           </Button>
         </Flex>
-        {loading && (
+        {false && (
           <Stack>
             <Skeleton
               h="200px"
@@ -152,8 +152,8 @@ export default function FavoritesPage() {
         )}
         <Pagination
           reference="favorites"
-          handlePage={executeSearch}
-          totalCountOfRegister={favoritesTotalCount}
+          handlePage={() => {}}
+          totalCountOfRegister={10}
           currentPage={configs?.favoritesCurrentPage}
         />
       </Flex>

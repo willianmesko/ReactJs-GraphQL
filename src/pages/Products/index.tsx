@@ -17,11 +17,8 @@ import { Input } from '../../components/Form/Input';
 import { Header } from '../../components/Header';
 import { Product } from '../../interfaces/Product.interface';
 import { useAuth } from '../../hooks/useAuth';
-import { Pagination } from '../../components/Pagination';
-import { useLazyQuery } from '@apollo/client';
-import { LOAD_GAMES } from '../../GraphQL/game.queries';
-import { LOAD_TELEVISIONS } from '../../GraphQL/television.queries';
 import { useFavorite } from '../../hooks/useFavorites';
+import { useProducts } from '../../hooks/useProducts';
 
 interface RouteParams {
   department: string;
@@ -31,38 +28,15 @@ export default function Products() {
   const { department } = useParams<RouteParams>();
   const { user, configs } = useAuth();
   const { favorites } = useFavorite();
+  const {getProducts, products, productsTotalCount, searchFieldOptions, searchProduct,  isLoading} = useProducts();
   const { setUserFavorites } = useFavorite();
   const history = useHistory();
-  const [products, setProducts] = useState<Product[]>();
-  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+
   const [searchField, setSearchField] = useState<string>();
   const [searchValue, setSearchValue] = useState<string>();
   const [searchSort, setSearchSort] = useState<string>();
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [executeSearch, { loading }] = useLazyQuery(
-    department === 'televisions' ? LOAD_TELEVISIONS : LOAD_GAMES,
-    {
-      onCompleted(response) {
-        setProducts(response[department].data);
 
-        setTotalCount(response[department].totalCount);
-        const productList: string[] = [];
 
-        response[department].data.map((product: Product[]) =>
-          Object.keys(product).filter(prod =>
-            prod !== 'id' &&
-            prod !== 'imageUrl' &&
-            prod !== '__typename' &&
-            !productList.includes(prod)
-              ? productList.push(prod)
-              : '',
-          ),
-        );
-
-        setSearchFieldOptions(productList);
-      },
-    },
-  );
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -75,19 +49,15 @@ export default function Products() {
   };
 
   useEffect(() => {
-    executeSearch({
-      variables: {
-        field: setSearchField,
-        value: setSearchValue,
-        page: configs?.productCurrentPage,
-      },
-    });
-  }, []);
+    getProducts(department)
+  }, [department]);
   return (
+  
+  
     <>
       <Header />
 
-      {loading ? (
+      {isLoading ? (
         <Flex w="100vw" mt="10" align="center" justify="center">
           <Skeleton
             w="300px"
@@ -138,7 +108,7 @@ export default function Products() {
                 mb="10px"
                 placeholder="Field"
                 value={searchField}
-                onChange={e => setSearchField(e.target.value)}
+                onChange={e => setSearchField(`product.${e.target.value}`)}
               >
                 {searchFieldOptions &&
                   searchFieldOptions.map(option => (
@@ -163,11 +133,12 @@ export default function Products() {
                 mb="10px"
                 width="100px"
                 onClick={() =>
-                  executeSearch({
+                  searchProduct({
                     variables: {
+                      department,
                       field: searchField,
                       value: searchValue,
-                      sort: searchSort,
+                      
                     },
                   })
                 }
@@ -175,6 +146,7 @@ export default function Products() {
                 Search
               </Button>
             </Flex>
+           
             <SimpleGrid columns={3} spacing={20}>
               {products && products.length > 0 ? (
                 products.map((product: Product, i: number) => (
@@ -263,15 +235,15 @@ export default function Products() {
               )}
             </SimpleGrid>
 
-            <Pagination
+            {/* <Pagination
               reference="products"
               handlePage={executeSearch}
               totalCountOfRegister={totalCount}
               currentPage={configs?.productCurrentPage}
-            />
+            /> */}
           </Flex>
         </Flex>
       )}
     </>
-  );
+  )
 }

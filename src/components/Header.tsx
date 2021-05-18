@@ -100,7 +100,7 @@ export function Header() {
             color={location.pathname === '/' ? 'white' : 'current'}
             mr="5"
           >
-            Departaments
+            Departments
           </ListItem>
           {user && (
             <ListItem

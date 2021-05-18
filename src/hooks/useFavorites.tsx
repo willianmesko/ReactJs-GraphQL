@@ -1,9 +1,10 @@
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
 import { CREATE_FAVORITE } from '../GraphQL/favorite.mutation';
 import { Product } from '../interfaces/Product.interface';
 import { useAuth } from './useAuth';
+import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 interface FavoritesContextData {
   setUserFavorites(product: Product): void;
   removeFavorite(product: Product): Promise<void>;
@@ -18,9 +19,8 @@ const FavoritesContext = createContext<FavoritesContextData>(
 );
 
 const FavoritesProvider: React.FC = ({ children }) => {
-  const [favorites, setFavorites] = useState<Product[]>([]);
+   const [favorites, setFavorites] = useState<Product[]>([]);
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
-  const { user } = useAuth();
 
   const [createFavorite] = useMutation(CREATE_FAVORITE, {
     onCompleted(response) {
@@ -33,11 +33,17 @@ const FavoritesProvider: React.FC = ({ children }) => {
       toast.error('Favorite already include.');
     },
   });
+
+  useQuery(LOAD_FAVORITES, {
+    onCompleted(response)  {
+      setFavoritesTotalCount(response.favorites.totalCount)
+      setFavorites(response.favorites.favorites)
+    }
+  });
   const removeFavorite = async (product: Product): Promise<void> => {};
 
   const setUserFavorites = async (product: Product) => {
     const data = {
-      userId: user.id,
       data: product,
     };
 
