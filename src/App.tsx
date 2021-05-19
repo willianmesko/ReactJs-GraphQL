@@ -14,7 +14,7 @@ import Routes from './routes';
 import AppProvider from './hooks';
 import 'react-toastify/dist/ReactToastify.css';
 
-const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
+const httpLink = new HttpLink({ uri: 'http://localhost:8080/graphql' });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext({
