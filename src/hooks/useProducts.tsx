@@ -17,11 +17,10 @@ interface ProductsContextData {
   handleResponse(product: Product[], totalCount: number): void;
   searchField: string;
   setSearchField(field: string): void;
-  searchValue:string;
-  setSearchValue(value:string): void;
-  searchSort:string;
+  searchValue: string;
+  setSearchValue(value: string): void;
+  searchSort: string;
   setSearchSort(sort: string): void;
-
 }
 
 const ProductsContext = createContext<ProductsContextData>(
@@ -29,7 +28,7 @@ const ProductsContext = createContext<ProductsContextData>(
 );
 
 const ProductsProvider: React.FC = ({ children }) => {
-  const {persitedField, persistedValue, persistedSort} = usePersist();
+  const { persitedField, persistedValue, persistedSort } = usePersist();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
@@ -42,11 +41,11 @@ const ProductsProvider: React.FC = ({ children }) => {
       handleResponse(response.products.products, response.products.totalCount);
     },
     onError(error) {
-     console.log(error)
+      console.log(error);
     },
   });
 
-   function searchProducts(options: QueryLazyOptions<OperationVariables>) {
+  function searchProducts(options: QueryLazyOptions<OperationVariables>) {
     executeSearch({
       ...options,
     });
@@ -58,8 +57,6 @@ const ProductsProvider: React.FC = ({ children }) => {
     const optionsList = extractSearchFieldOptions(products);
     setSearchFieldOptions(optionsList);
   }
-
-
 
   return (
     <ProductsContext.Provider

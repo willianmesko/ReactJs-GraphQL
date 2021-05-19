@@ -5,7 +5,6 @@ import FavoriteItem from '../../components/FavoriteItem';
 import { useFavorite } from '../../hooks/useFavorites';
 import SearchFilters from '../../components/SearchFilters';
 
-
 export default function Favorites() {
   const {
     favorites,
@@ -20,8 +19,6 @@ export default function Favorites() {
     searchSort,
     setSearchSort,
   } = useFavorite();
-
-
 
   return (
     <>
@@ -52,7 +49,7 @@ export default function Favorites() {
             ))}
           </Stack>
         )}
-        {!favorites  ? (
+        {!favorites ? (
           <h1>No favorite found</h1>
         ) : (
           <>
@@ -60,7 +57,6 @@ export default function Favorites() {
           </>
         )}
         <Pagination
-        
           handlePage={searchFavorite}
           totalCountOfRegister={favoritesTotalCount}
         />

@@ -19,8 +19,7 @@ const httpLink = new HttpLink({ uri: 'http://localhost:8080/graphql' });
 const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
-      authorization:
-        `Bearer ${localStorage.getItem('@token')}` || null,
+      authorization: `Bearer ${localStorage.getItem('@token')}` || null,
     },
   });
 

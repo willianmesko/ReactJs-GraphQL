@@ -14,22 +14,18 @@ interface AuthContextData {
   user: User;
   signIn(credencials: SignInCredencials): Promise<void>;
   signOut(): void;
- 
 }
-
-
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  
   const [user, setUser] = useState<User>(() => {
     const user = localStorage.getItem('@user');
-    if(user){
-      return JSON.parse(user)
+    if (user) {
+      return JSON.parse(user);
     }
-    return 
-  })
+    return;
+  });
   const history = useHistory();
   const [login] = useMutation(SIGN_IN, {
     onError() {
@@ -37,24 +33,15 @@ const AuthProvider: React.FC = ({ children }) => {
       return;
     },
     onCompleted(userData) {
-      setUser(
-       userData.login.user,
-       
-      );
+      setUser(userData.login.user);
       localStorage.setItem('@token', userData.login.token);
-      localStorage.setItem(
-        '@user',
-        JSON.stringify(userData.login.user),
-      );
-     
+      localStorage.setItem('@user', JSON.stringify(userData.login.user));
 
       history.push('/');
     },
   });
 
- 
-
- async  function signIn ({ email, password }: SignInCredencials){
+  async function signIn({ email, password }: SignInCredencials) {
     login({
       variables: {
         data: {
@@ -63,16 +50,14 @@ const AuthProvider: React.FC = ({ children }) => {
         },
       },
     });
-  };
+  }
 
   function signOut() {
     localStorage.clear();
 
     window.location.pathname = '/';
     setUser({} as User);
-  };
-
- 
+  }
 
   return (
     <AuthContext.Provider
@@ -80,7 +65,6 @@ const AuthProvider: React.FC = ({ children }) => {
         user,
         signIn,
         signOut,
-        
       }}
     >
       {children}

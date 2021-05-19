@@ -36,9 +36,7 @@ export default function Header() {
             cursor: 'pointer',
           }}
           onClick={() => history.push('/')}
-        >
-          
-        </Text>
+        ></Text>
 
         {user ? (
           <Button
@@ -58,7 +56,7 @@ export default function Header() {
               color="#000"
               borderRadius="30px"
               w="100px"
-             bg="pink.300"
+              bg="pink.300"
               mt="6"
             >
               Join Us
@@ -92,7 +90,6 @@ export default function Header() {
           listStyleType="none"
         >
           <ListItem
-          
             onClick={() => history.push('/')}
             _hover={{
               color: '#000',

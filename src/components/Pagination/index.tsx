@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import {
   Paginator,
@@ -7,7 +6,7 @@ import {
   PageGroup,
 } from 'chakra-paginator';
 import { QueryLazyOptions, OperationVariables } from '@apollo/client';
-import { normalStyles, activeStyles, separatorStyles} from './styles';
+import { normalStyles, activeStyles, separatorStyles } from './styles';
 
 interface PaginationProps {
   totalCountOfRegister: number;
@@ -20,7 +19,6 @@ interface RouteParams {
 export default function Pagination({
   totalCountOfRegister,
   handlePage,
-
 }: PaginationProps) {
   const outerLimit = 2;
   const innerLimit = 2;
@@ -35,9 +33,9 @@ export default function Pagination({
       },
     });
 
-  const handlePageChange = (nextPage: number) => {   
+  const handlePageChange = (nextPage: number) => {
     setCurrentPage(nextPage);
- 
+
     handlePage({
       variables: {
         page: nextPage,
