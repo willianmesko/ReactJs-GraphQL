@@ -2,7 +2,7 @@ import { Flex, Button, Select } from '@chakra-ui/react';
 import { Input } from './Form/Input';
 import { QueryLazyOptions, OperationVariables } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import {usePersist} from '../hooks/usePersist';
+import { usePersist } from '../hooks/usePersist';
 
 interface RouteParams {
   department: string;
@@ -30,8 +30,9 @@ export default function SearchFilters({
   executeSearch,
 }: FilterProps) {
   const { department } = useParams<RouteParams>();
-  const {persitSearchField, persistSearchValue, persistSearchSort} =  usePersist()
- 
+  const { persitSearchField, persistSearchValue, persistSearchSort } =
+    usePersist();
+
   return (
     <Flex w="80vw" align="center" justifyContent="space-between">
       <Input
@@ -51,11 +52,13 @@ export default function SearchFilters({
         mb="10px"
         placeholder="Field"
         value={searchField}
-        onChange={e => persitSearchField(e.target.value,setSearchField ) }
+        onChange={e => persitSearchField(e.target.value, setSearchField)}
       >
         {searchFieldOptions &&
           searchFieldOptions.map((option, index) => (
-            <option key={index} value={option}>{option.toUpperCase()}</option>
+            <option key={index} value={option}>
+              {option.toUpperCase()}
+            </option>
           ))}
       </Select>
 

@@ -38,9 +38,6 @@ export default function Products() {
       sort: searchSort,
     },
     onCompleted(response) {
-    
-    
-
       handleResponse(response.products.products, response.products.totalCount);
     },
   });
@@ -51,16 +48,16 @@ export default function Products() {
 
       {loading ? (
         <Flex w="100vw" mt="10" align="center" justify="center">
-         {Array(3).map((_,index) => (
-           <Skeleton
-           key={index}
-           w="300px"
-           ml="20"
-           h="400px"
-           borderWidth="1px"
-           borderRadius="lg"
-         />
-         ))}
+          {Array(3).map((_, index) => (
+            <Skeleton
+              key={index}
+              w="300px"
+              ml="20"
+              h="400px"
+              borderWidth="1px"
+              borderRadius="lg"
+            />
+          ))}
         </Flex>
       ) : (
         <Flex>

@@ -1,11 +1,4 @@
-import {
-  Flex,
-  Box,
-  Text,
-  Image,
-  Stack,
-  Button,
-} from '@chakra-ui/react';
+import { Flex, Box, Text, Image, Stack, Button } from '@chakra-ui/react';
 import { Product } from '../interfaces/Product.interface';
 import { useFavorite } from '../hooks/useFavorites';
 import moneyFormat from '../utils/moneyFormat';
@@ -16,12 +9,10 @@ interface FavoriteItemProps {
 export default function FavoriteItem({ products }: FavoriteItemProps) {
   const { removeFavorite } = useFavorite();
 
-
   return (
     <Stack>
-     
       {products ? (
-        products.map((product) => (
+        products.map(product => (
           <Flex
             key={product.id}
             h="200px"
@@ -48,11 +39,7 @@ export default function FavoriteItem({ products }: FavoriteItemProps) {
 
               <Text
                 mt="2"
-                onClick={ () => 
-                 
-                   removeFavorite(product)
-                  
-                }
+                onClick={() => removeFavorite(product)}
                 _hover={{
                   cursor: 'pointer',
                   color: 'black',
