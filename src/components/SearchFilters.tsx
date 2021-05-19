@@ -5,7 +5,7 @@ import {
   } from '@chakra-ui/react';
 import { Input } from './Form/Input';
 import { QueryLazyOptions, OperationVariables } from '@apollo/client';
-import { useEffect, useState } from 'react';
+
 import { useParams } from 'react-router-dom';
 
 

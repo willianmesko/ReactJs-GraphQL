@@ -2,6 +2,7 @@ import { OperationVariables, QueryLazyOptions, useLazyQuery} from '@apollo/clien
 import React, { createContext, useState, useContext } from 'react';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
+import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
 
 interface ProductsContextData {
   getProducts(departament: string): void
@@ -21,25 +22,14 @@ const ProductsProvider: React.FC = ({ children }) => {
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([])
  
-
   const [executeSearch ,{  loading} ] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
      setProducts(response.products.products)
      setProductsTotalCount(response.products.totalCount)
-      const productList: string[] = [];
+      const optionsList  = extractSearchFieldOptions(response.products.products);
+      setSearchFieldOptions(optionsList);
+        
    
-           response.products.products.map((product: Product[]) =>
-             Object.keys(product).filter(prod =>
-               prod !== 'id' &&
-               prod !== 'imageUrl' &&
-               prod !== '__typename' &&
-               !productList.includes(prod)
-                 ? productList.push(prod)
-                 : '',
-             ),
-           );
-   
-           setSearchFieldOptions(productList);
     },
     onError(error)  {
       console.log(error)
@@ -56,8 +46,7 @@ const ProductsProvider: React.FC = ({ children }) => {
     executeSearch({
       variables: {
         department, 
-        
-      }
+       }
     })
   }
 

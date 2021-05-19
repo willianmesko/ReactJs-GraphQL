@@ -5,6 +5,7 @@ import { Config } from '../interfaces/Config.interface';
 import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
 import { SIGN_IN } from '../GraphQL/user.mutations';
+
 interface SignInCredencials {
   email: string;
   password: string;
@@ -36,7 +37,7 @@ const AuthProvider: React.FC = ({ children }) => {
       toast.error('Email/password invalid');
       return;
     },
-    onCompleted(userData: any) {
+    onCompleted(userData) {
       setData({
         user: userData.login.user,
         configs: defaultsConfigs,
@@ -80,10 +81,8 @@ const AuthProvider: React.FC = ({ children }) => {
   };
 
   const signOut = () => {
-    localStorage.removeItem('@growthHackers:user');
-    localStorage.removeItem('@growthHackers:token');
-    localStorage.removeItem('@growthHackers:configs');
-
+    localStorage.clear();
+   
     window.location.pathname = '/';
     setData({} as AuthState);
   };

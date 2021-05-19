@@ -37,7 +37,7 @@ export default function Header() {
           }}
           onClick={() => history.push('/')}
         >
-          GraphQL
+          
         </Text>
 
         {user ? (

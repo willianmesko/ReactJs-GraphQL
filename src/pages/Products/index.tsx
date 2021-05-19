@@ -20,12 +20,8 @@ interface RouteParams {
 
 export default function Products() {
   const { department } = useParams<RouteParams>();
-
-
-  const {getProducts, products, productsTotalCount, searchFieldOptions, searchProduct,  isLoading} = useProducts();
+ const {getProducts, products, productsTotalCount, searchFieldOptions, searchProduct,  isLoading} = useProducts();
  
-
-
   const [searchField, setSearchField] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchSort, setSearchSort] = useState<string>('');
@@ -71,9 +67,11 @@ useEffect(() => {
              searchSort={searchSort} 
              setSearchSort={setSearchSort}
               executeSearch={searchProduct}/>
+
             <SimpleGrid columns={3} spacing={20}>
-              {products && products.length > 0 ? (
+              {products   ? (
                 products.map((product: Product, i: number) => (
+
                   <ProductItem product={product}/>
                 ))
               ) : (

@@ -3,19 +3,19 @@ import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
 import { CREATE_FAVORITE } from '../GraphQL/favorite.mutation';
 import { Product } from '../interfaces/Product.interface';
-
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
+import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
+
 interface FavoritesContextData {
   addFavorite(product: Product): void;
   removeFavorite(product: Product): Promise<void>;
-  favorites: Product[];
-  setFavorites(product: Product[]): void;
-  setFavoritesTotalCount(total: number): void;
-  favoritesTotalCount: number;
   getFavorites(): void;
+  searchFavorite(options: QueryLazyOptions<OperationVariables>): void;
+  favorites: Product[];
+  favoritesTotalCount: number;
   searchFieldOptions: string[]
   isLoading: boolean;
-  searchFavorite(options: QueryLazyOptions<OperationVariables>): void;
+ 
 }
 
 const FavoritesContext = createContext<FavoritesContextData>(
@@ -23,7 +23,7 @@ const FavoritesContext = createContext<FavoritesContextData>(
 );
 
 const FavoritesProvider: React.FC = ({ children }) => {
-   const [favorites, setFavorites] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<Product[]>([]);
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([])
 
@@ -59,21 +59,9 @@ const FavoritesProvider: React.FC = ({ children }) => {
      
       setFavoritesTotalCount(response.favorites.totalCount)
       setFavorites(response.favorites.favorites)
-      console.log(response.favorites.favorites)
-      const favoritesList: string[] = [];
-   
-      response.favorites.favorites.map((favorite: Product[]) =>
-        Object.keys(favorite).filter(fav =>
-          fav !== 'id' &&
-          fav !== 'imageUrl' &&
-          fav !== '__typename' &&
-          !favoritesList.includes(fav)
-            ? favoritesList.push(fav)
-            : '',
-        ),
-      );
-
-      setSearchFieldOptions(favoritesList);
+      
+      const optionsList  = extractSearchFieldOptions(response.favorites.favorites);
+      setSearchFieldOptions(optionsList);
     }
   });
   const removeFavorite = async (product: Product): Promise<void> => {};
@@ -105,8 +93,6 @@ const FavoritesProvider: React.FC = ({ children }) => {
         addFavorite,
         removeFavorite,
         favorites,
-        setFavorites,
-        setFavoritesTotalCount,
         favoritesTotalCount,
         getFavorites, 
         searchFieldOptions,
