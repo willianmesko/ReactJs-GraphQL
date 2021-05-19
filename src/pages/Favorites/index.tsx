@@ -1,30 +1,26 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { Flex, Skeleton, Stack } from '@chakra-ui/react';
 import Header from '../../components/Header';
 import Pagination from '../../components/Pagination';
-import { useAuth } from '../../hooks/useAuth';
 import FavoriteItem from '../../components/FavoriteItem';
 import { useFavorite } from '../../hooks/useFavorites';
 import SearchFilters from '../../components/SearchFilters';
 
-export default function FavoritesPage() {
-  const { configs } = useAuth();
+
+export default function Favorites() {
   const {
     favorites,
     favoritesTotalCount,
-    getFavorites,
     searchFieldOptions,
-    isLoading,
     searchFavorite,
+    isLoading,
   } = useFavorite();
 
   const [searchField, setSearchField] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchSort, setSearchSort] = useState<string>('');
 
-  useEffect(() => {
-    getFavorites();
-  }, []);
+
 
   return (
     <>
@@ -55,7 +51,7 @@ export default function FavoritesPage() {
             ))}
           </Stack>
         )}
-        {favorites && favorites?.length === 0 ? (
+        {!favorites  ? (
           <h1>No favorite found</h1>
         ) : (
           <>
@@ -63,10 +59,9 @@ export default function FavoritesPage() {
           </>
         )}
         <Pagination
-          reference="favorites"
-          handlePage={() => {}}
+        
+          handlePage={searchFavorite}
           totalCountOfRegister={favoritesTotalCount}
-          currentPage={configs?.favoritesCurrentPage}
         />
       </Flex>
     </>

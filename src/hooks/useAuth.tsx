@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { User } from '../interfaces/User.interface';
-import { Config } from '../interfaces/Config.interface';
 import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
 import { SIGN_IN } from '../GraphQL/user.mutations';
@@ -15,22 +14,22 @@ interface AuthContextData {
   user: User;
   signIn(credencials: SignInCredencials): Promise<void>;
   signOut(): void;
-  configs: Config;
-  setConfigs(configs?: Config): void;
+ 
 }
 
-interface AuthState {
-  user: User;
-  configs: Config;
-}
+
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const defaultsConfigs = {
-    productCurrentPage: 1,
-    favoritesCurrentPage: 1,
-  };
+  
+  const [user, setUser] = useState<User>(() => {
+    const user = localStorage.getItem('@user');
+    if(user){
+      return JSON.parse(user)
+    }
+    return 
+  })
   const history = useHistory();
   const [login] = useMutation(SIGN_IN, {
     onError() {
@@ -38,38 +37,24 @@ const AuthProvider: React.FC = ({ children }) => {
       return;
     },
     onCompleted(userData) {
-      setData({
-        user: userData.login.user,
-        configs: defaultsConfigs,
-      });
-      localStorage.setItem('@growthHackers:token', userData.login.token);
+      setUser(
+       userData.login.user,
+       
+      );
+      localStorage.setItem('@token', userData.login.token);
       localStorage.setItem(
-        '@growthHackers:user',
+        '@user',
         JSON.stringify(userData.login.user),
       );
-      localStorage.setItem(
-        '@growthHackers:configs',
-        JSON.stringify(defaultsConfigs),
-      );
+     
 
       history.push('/');
     },
   });
 
-  const [data, setData] = useState<AuthState>(() => {
-    const user = localStorage.getItem('@growthHackers:user');
-    const configs = localStorage.getItem('@growthHackers:configs');
-    if (user && configs) {
-      return {
-        user: JSON.parse(user),
-        configs: JSON.parse(configs),
-      };
-    }
+ 
 
-    return {} as AuthState;
-  });
-
-  const signIn = async ({ email, password }: SignInCredencials) => {
+ async  function signIn ({ email, password }: SignInCredencials){
     login({
       variables: {
         data: {
@@ -80,29 +65,22 @@ const AuthProvider: React.FC = ({ children }) => {
     });
   };
 
-  const signOut = () => {
+  function signOut() {
     localStorage.clear();
 
     window.location.pathname = '/';
-    setData({} as AuthState);
+    setUser({} as User);
   };
 
-  const setConfigs = (configs: Config) => {
-    localStorage.setItem('@growthHackers:configs', JSON.stringify(configs));
-    setData({
-      ...data,
-      configs,
-    });
-  };
+ 
 
   return (
     <AuthContext.Provider
       value={{
-        user: data.user,
+        user,
         signIn,
         signOut,
-        configs: data.configs,
-        setConfigs,
+        
       }}
     >
       {children}

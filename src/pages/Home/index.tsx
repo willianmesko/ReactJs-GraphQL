@@ -3,7 +3,7 @@ import Header from '../../components/Header';
 import DepartmentBlock from '../../components/DepartmentBlock';
 import TelevisionImage from '../../assets/acessories.webp';
 import GamesImage from '../../assets/ps5.jpeg';
-import CellPhone from '../../assets/cellphone.jpeg';
+
 
 export default function Home() {
   return (

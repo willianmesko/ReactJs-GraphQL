@@ -5,11 +5,9 @@ import {
   Image,
   Stack,
   Button,
-  Spinner,
 } from '@chakra-ui/react';
 import { Product } from '../interfaces/Product.interface';
 import { useFavorite } from '../hooks/useFavorites';
-import { useState } from 'react';
 import moneyFormat from '../utils/moneyFormat';
 interface FavoriteItemProps {
   products: Product[];
@@ -17,26 +15,15 @@ interface FavoriteItemProps {
 
 export default function FavoriteItem({ products }: FavoriteItemProps) {
   const { removeFavorite } = useFavorite();
-  const [isRemovingFavorite, setIsremovingFavorite] = useState(false);
+
 
   return (
     <Stack>
-      {isRemovingFavorite && (
-        <Flex alignContent="center" justifyContent="center">
-          <Spinner
-            position="absolute"
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="green.800"
-            size="xl"
-          />
-        </Flex>
-      )}
-      {products?.length > 0 ? (
-        products.map((product, i) => (
+     
+      {products ? (
+        products.map((product) => (
           <Flex
-            key={i}
+            key={product.id}
             h="200px"
             w="900px"
             borderBottom="1px solid gray"
@@ -61,11 +48,11 @@ export default function FavoriteItem({ products }: FavoriteItemProps) {
 
               <Text
                 mt="2"
-                onClick={async () => (
-                  setIsremovingFavorite(true),
-                  await removeFavorite(product),
-                  setIsremovingFavorite(false)
-                )}
+                onClick={ () => 
+                 
+                   removeFavorite(product)
+                  
+                }
                 _hover={{
                   cursor: 'pointer',
                   color: 'black',

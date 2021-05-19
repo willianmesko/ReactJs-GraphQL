@@ -15,7 +15,7 @@ const Route: React.FC<RouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const user = localStorage.getItem('@growthHackers:user');
+  const user = localStorage.getItem('@user');
   if (!user && isPrivate) {
     return <Redirect to="/signIn" />;
   }

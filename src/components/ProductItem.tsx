@@ -13,11 +13,12 @@ export interface ProductItemProps {
 }
 
 export default function ProductItem({ product }: ProductItemProps) {
-  const { user, configs } = useAuth();
+  const { user } = useAuth();
   const { favorites, addFavorite, removeFavorite } = useFavorite();
   const history = useHistory();
   return (
     <Box
+      key={product.id}
       transition="all 0.25s ease"
       w="300px"
       h="400px"
