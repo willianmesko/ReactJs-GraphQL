@@ -1,6 +1,6 @@
 import { Flex, SimpleGrid } from '@chakra-ui/react';
-import { Header } from '../../components/Header';
-import { DepartmentBlock } from '../../components/DepartmentBlock';
+import  Header  from '../../components/Header';
+import  DepartmentBlock  from '../../components/DepartmentBlock';
 import TelevisionImage from '../../assets/acessories.webp';
 import GamesImage from '../../assets/ps5.jpeg';
 import CellPhone from '../../assets/cellphone.jpeg';

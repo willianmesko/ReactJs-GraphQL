@@ -1,6 +1,6 @@
 import { QueryLazyOptions } from '@apollo/client';
 import { Stack, Text } from '@chakra-ui/react';
-import { PaginationItem } from './PaginationItem';
+import  PaginationItem  from './PaginationItem';
 
 interface PaginationProps {
   totalCountOfRegister: number;
@@ -18,7 +18,7 @@ function generatePagesArray(from: number, to: number) {
     .filter(page => page > 0);
 }
 
-export function Pagination({
+export default function Pagination({
   totalCountOfRegister,
   registerPerPage = 3,
   currentPage = 1,

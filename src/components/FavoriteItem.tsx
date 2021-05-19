@@ -10,17 +10,14 @@ import {
 import { Product } from '../interfaces/Product.interface';
 import { useFavorite } from '../hooks/useFavorites';
 import { useState } from 'react';
-
+import moneyFormat from '../utils/moneyFormat';
 interface FavoriteItemProps {
   products: Product[];
 }
 
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-});
 
-export function FavoriteItem({ products }: FavoriteItemProps) {
+
+export default  function FavoriteItem({ products }: FavoriteItemProps) {
   const { removeFavorite } = useFavorite();
   const [isRemovingFavorite, setIsremovingFavorite] = useState(false);
 
@@ -56,7 +53,7 @@ export function FavoriteItem({ products }: FavoriteItemProps) {
                 {product.name}
               </Text>
               <Text fontSize="20" mt="2" letterSpacing="tight" color="black">
-                {formatter.format(product.price)}
+                {moneyFormat.format(product.price)}
               </Text>
             </Box>
             <Flex flexDir="column">

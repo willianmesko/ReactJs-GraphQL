@@ -6,7 +6,7 @@ import { Product } from '../interfaces/Product.interface';
 
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 interface FavoritesContextData {
-  setUserFavorites(product: Product): void;
+  addFavorite(product: Product): void;
   removeFavorite(product: Product): Promise<void>;
   favorites: Product[];
   setFavorites(product: Product[]): void;
@@ -30,13 +30,13 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [createFavorite] = useMutation(CREATE_FAVORITE, {
     onCompleted(response) {
       toast.success('Favorite saved.');
-      console.log(response.createFavorite.data)
+      console.log(response.createFavorite.product)
       const favoritesList: string[] = [];
       
      
       console.log(searchFieldOptions)
         setSearchFieldOptions(
-           Object.keys(response.createFavorite.data).filter(
+           Object.keys(response.createFavorite.product).filter(
              fav => !searchFieldOptions.includes(fav) 
              && fav !== 'imageUrl'
             && [...searchFieldOptions, fav] 
@@ -45,8 +45,8 @@ const FavoritesProvider: React.FC = ({ children }) => {
    
     
   
-      setFavorites([...favorites, response.createFavorite.data] );
-      setFavoritesTotalCount(response.createFavorite.data.length);
+      setFavorites([...favorites, response.createFavorite.product] );
+      setFavoritesTotalCount(response.createFavorite.product.length);
      
     },
     onError() {
@@ -78,9 +78,9 @@ const FavoritesProvider: React.FC = ({ children }) => {
   });
   const removeFavorite = async (product: Product): Promise<void> => {};
 
-  const setUserFavorites = async (product: Product) => {
+  const addFavorite = async (product: Product) => {
     const data = {
-      data: product,
+       product,
     };
 
     createFavorite({
@@ -90,6 +90,10 @@ const FavoritesProvider: React.FC = ({ children }) => {
     });
   };
 
+  function searchFavorite(options:  QueryLazyOptions<OperationVariables> ) {
+    executeSearch({...options})
+  }
+
   function getFavorites() {
     executeSearch({})
   }
@@ -98,7 +102,7 @@ const FavoritesProvider: React.FC = ({ children }) => {
   return (
     <FavoritesContext.Provider
       value={{
-        setUserFavorites,
+        addFavorite,
         removeFavorite,
         favorites,
         setFavorites,
@@ -107,7 +111,7 @@ const FavoritesProvider: React.FC = ({ children }) => {
         getFavorites, 
         searchFieldOptions,
         isLoading: loading, 
-        searchFavorite: executeSearch,
+        searchFavorite,
       }}
     >
       {children}
@@ -119,7 +123,7 @@ function useFavorite(): FavoritesContextData {
   const context = useContext(FavoritesContext);
 
   if (!context) {
-    throw new Error('useFavorite must be used within an AuthProvider.');
+    throw new Error('useFavorite must be used within an FavoriteProvider.');
   }
 
   return context;

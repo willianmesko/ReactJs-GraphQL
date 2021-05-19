@@ -1,11 +1,8 @@
 import { OperationVariables, QueryLazyOptions, useLazyQuery} from '@apollo/client';
-import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
-
 import { Product } from '../interfaces/Product.interface';
-
-
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
+
 interface ProductsContextData {
   getProducts(departament: string): void
   products: Product[]
@@ -20,18 +17,16 @@ const ProductsContext = createContext<ProductsContextData>(
 );
 
 const ProductsProvider: React.FC = ({ children }) => {
-   const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([])
  
 
   const [executeSearch ,{  loading} ] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
-      console.log(response)
      setProducts(response.products.products)
-
      setProductsTotalCount(response.products.totalCount)
-           const productList: string[] = [];
+      const productList: string[] = [];
    
            response.products.products.map((product: Product[]) =>
              Object.keys(product).filter(prod =>
@@ -50,6 +45,12 @@ const ProductsProvider: React.FC = ({ children }) => {
       console.log(error)
     }
   });
+
+  async function searchProduct(options:  QueryLazyOptions<OperationVariables>) {
+    executeSearch({
+      ...options,
+    })
+  }
   
  async function getProducts(department: string): Promise<void> {
     executeSearch({
@@ -70,7 +71,7 @@ const ProductsProvider: React.FC = ({ children }) => {
         products,
         productsTotalCount,
         searchFieldOptions,
-        searchProduct: executeSearch,
+        searchProduct,
       }}
     >
       {children}

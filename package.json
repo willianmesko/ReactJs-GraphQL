@@ -19,6 +19,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/uuid": "^8.3.0",
     "axios": "^0.21.1",
+    "chakra-paginator": "^0.7.1",
     "framer-motion": "^4.1.13",
     "graphql": "^15.5.0",
     "icons": "^1.0.0",

@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
 
-export function Header() {
+export default function Header() {
   const history = useHistory();
   const location = useLocation();
   const { user, signOut } = useAuth();

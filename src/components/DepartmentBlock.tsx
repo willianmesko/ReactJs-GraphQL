@@ -6,7 +6,7 @@ interface FavoritesBlockProps {
   image?: string;
 }
 
-export function DepartmentBlock({ name, image }: FavoritesBlockProps) {
+export default function DepartmentBlock({ name, image }: FavoritesBlockProps) {
   const history = useHistory();
   return (
     <Stack>

@@ -9,7 +9,7 @@ interface PaginationItemProps {
   handlePage(options: QueryLazyOptions<any>): void;
 }
 
-export function PaginationItem({
+export default function PaginationItem({
   isCurrent = false,
   number,
   reference,

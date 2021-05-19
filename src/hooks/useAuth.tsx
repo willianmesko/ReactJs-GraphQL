@@ -10,7 +10,7 @@ interface SignInCredencials {
   password: string;
 }
 
-interface AppContextData {
+interface AuthContextData {
   user: User;
   signIn(credencials: SignInCredencials): Promise<void>;
   signOut(): void;
@@ -18,12 +18,12 @@ interface AppContextData {
   setConfigs(configs?: Config): void;
 }
 
-interface AppState {
+interface AuthState {
   user: User;
   configs: Config;
 }
 
-const AppContext = createContext<AppContextData>({} as AppContextData);
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const defaultsConfigs = {
@@ -55,7 +55,7 @@ const AuthProvider: React.FC = ({ children }) => {
     },
   });
 
-  const [data, setData] = useState<AppState>(() => {
+  const [data, setData] = useState<AuthState>(() => {
     const user = localStorage.getItem('@growthHackers:user');
     const configs = localStorage.getItem('@growthHackers:configs');
     if (user && configs) {
@@ -65,7 +65,7 @@ const AuthProvider: React.FC = ({ children }) => {
       };
     }
 
-    return {} as AppState;
+    return {} as AuthState;
   });
 
   const signIn = async ({ email, password }: SignInCredencials) => {
@@ -85,7 +85,7 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('@growthHackers:configs');
 
     window.location.pathname = '/';
-    setData({} as AppState);
+    setData({} as AuthState);
   };
 
   const setConfigs = (configs: Config) => {
@@ -97,7 +97,7 @@ const AuthProvider: React.FC = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider
+    <AuthContext.Provider
       value={{
         user: data.user,
         signIn,
@@ -107,12 +107,12 @@ const AuthProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </AppContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
-function useAuth(): AppContextData {
-  const context = useContext(AppContext);
+function useAuth(): AuthContextData {
+  const context = useContext(AuthContext);
 
   if (!context) {
     throw new Error('useApp must be used within an AuthProvider.');
