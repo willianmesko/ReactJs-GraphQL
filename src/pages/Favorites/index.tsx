@@ -1,4 +1,3 @@
-import {  useState } from 'react';
 import { Flex, Skeleton, Stack } from '@chakra-ui/react';
 import Header from '../../components/Header';
 import Pagination from '../../components/Pagination';
@@ -14,11 +13,13 @@ export default function Favorites() {
     searchFieldOptions,
     searchFavorite,
     isLoading,
+    searchField,
+    setSearchField,
+    searchValue,
+    setSearchValue,
+    searchSort,
+    setSearchSort,
   } = useFavorite();
-
-  const [searchField, setSearchField] = useState<string>('');
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [searchSort, setSearchSort] = useState<string>('');
 
 
 

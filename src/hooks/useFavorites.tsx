@@ -22,6 +22,12 @@ interface FavoritesContextData {
   favoritesTotalCount: number;
   searchFieldOptions: string[];
   isLoading: boolean;
+  searchField: string;
+  setSearchField(field: string): void;
+  searchValue:string;
+  setSearchValue(value:string): void;
+  searchSort:string;
+  setSearchSort(sort: string): void;
 }
 
 const FavoritesContext = createContext<FavoritesContextData>(
@@ -32,6 +38,10 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+
+  const [searchField, setSearchField] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchSort, setSearchSort] = useState<string>('');
 
   const [deleteFavorite] = useMutation(DELETE_FAVORITE, {
     onCompleted(response) {
@@ -136,6 +146,12 @@ const FavoritesProvider: React.FC = ({ children }) => {
         searchFieldOptions,
         searchFavorite,
         isLoading: loading,
+        searchField,
+        setSearchField,
+        searchValue,
+        setSearchValue,
+        searchSort,
+        setSearchSort,
       }}
     >
       {children}
