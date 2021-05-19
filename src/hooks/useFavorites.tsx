@@ -1,21 +1,25 @@
-import { QueryLazyOptions, useLazyQuery, useMutation, OperationVariables } from '@apollo/client';
+import {
+  QueryLazyOptions,
+  useLazyQuery,
+  useMutation,
+  OperationVariables,
+} from '@apollo/client';
 import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
-import { CREATE_FAVORITE } from '../GraphQL/favorite.mutation';
+import { CREATE_FAVORITE, DELETE_FAVORITE } from '../GraphQL/favorite.mutation';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
 
 interface FavoritesContextData {
   addFavorite(product: Product): void;
-  removeFavorite(product: Product): Promise<void>;
+  removeFavorite(product: Product): void;
   getFavorites(): void;
   searchFavorite(options: QueryLazyOptions<OperationVariables>): void;
   favorites: Product[];
   favoritesTotalCount: number;
-  searchFieldOptions: string[]
+  searchFieldOptions: string[];
   isLoading: boolean;
- 
 }
 
 const FavoritesContext = createContext<FavoritesContextData>(
@@ -25,67 +29,74 @@ const FavoritesContext = createContext<FavoritesContextData>(
 const FavoritesProvider: React.FC = ({ children }) => {
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
-  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([])
-
+  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+  const [deleteFavorite] = useMutation(DELETE_FAVORITE, {
+    onCompleted(response) {
+      setFavorites(
+        favorites.filter(
+          favorite => favorite.name !== response.deleteFavorite.product.name,
+        ),
+      );
+    },
+  });
   const [createFavorite] = useMutation(CREATE_FAVORITE, {
     onCompleted(response) {
       toast.success('Favorite saved.');
-      console.log(response.createFavorite.product)
-      const favoritesList: string[] = [];
-      
-     
-      console.log(searchFieldOptions)
-        setSearchFieldOptions(
-           Object.keys(response.createFavorite.product).filter(
-             fav => !searchFieldOptions.includes(fav) 
-             && fav !== 'imageUrl'
-            && [...searchFieldOptions, fav] 
-            ))
-     
-   
-    
-  
-      setFavorites([...favorites, response.createFavorite.product] );
+
+      setSearchFieldOptions(
+        Object.keys(response.createFavorite.product).filter(
+          fav =>
+            !searchFieldOptions.includes(fav) &&
+            fav !== 'imageUrl' && [...searchFieldOptions, fav],
+        ),
+      );
+
+      setFavorites([...favorites, response.createFavorite.product]);
       setFavoritesTotalCount(response.createFavorite.product.length);
-     
     },
     onError() {
       toast.error('Favorite already include.');
     },
   });
 
-  const [executeSearch, {loading} ] = useLazyQuery(LOAD_FAVORITES, {
-    onCompleted(response)  {
-     
-      setFavoritesTotalCount(response.favorites.totalCount)
-      setFavorites(response.favorites.favorites)
-      
-      const optionsList  = extractSearchFieldOptions(response.favorites.favorites);
-      setSearchFieldOptions(optionsList);
-    }
+  const [executeSearch, { loading }] = useLazyQuery(LOAD_FAVORITES, {
+    onCompleted(response) {
+      handleResponse(
+        response.favorites.favorites,
+        response.favorites.totalCount,
+      );
+    },
   });
-  const removeFavorite = async (product: Product): Promise<void> => {};
 
-  const addFavorite = async (product: Product) => {
-    const data = {
-       product,
-    };
-
-    createFavorite({
+  function handleResponse(products, totalCount) {
+    setFavorites(products);
+    setFavoritesTotalCount(totalCount);
+    const optionsList = extractSearchFieldOptions(products);
+    setSearchFieldOptions(optionsList);
+  }
+  const removeFavorite = (product: Product): void => {
+    deleteFavorite({
       variables: {
-        data,
+        productName: product.name,
       },
     });
   };
 
-  function searchFavorite(options:  QueryLazyOptions<OperationVariables> ) {
-    executeSearch({...options})
+  const addFavorite = async (product: Product) => {
+    createFavorite({
+      variables: {
+        data: { product },
+      },
+    });
+  };
+
+  function searchFavorite(options: QueryLazyOptions<OperationVariables>) {
+    executeSearch({ ...options });
   }
 
   function getFavorites() {
-    executeSearch({})
+    executeSearch({});
   }
-  
 
   return (
     <FavoritesContext.Provider
@@ -94,9 +105,9 @@ const FavoritesProvider: React.FC = ({ children }) => {
         removeFavorite,
         favorites,
         favoritesTotalCount,
-        getFavorites, 
+        getFavorites,
         searchFieldOptions,
-        isLoading: loading, 
+        isLoading: loading,
         searchFavorite,
       }}
     >

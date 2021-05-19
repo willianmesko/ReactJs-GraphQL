@@ -1,16 +1,19 @@
-import { OperationVariables, QueryLazyOptions, useLazyQuery} from '@apollo/client';
 import React, { createContext, useState, useContext } from 'react';
+import {
+  OperationVariables,
+  QueryLazyOptions,
+  useLazyQuery,
+} from '@apollo/client';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
 
 interface ProductsContextData {
-  getProducts(departament: string): void
-  products: Product[]
-  productsTotalCount: number,
-  searchFieldOptions: string[]
-  isLoading: boolean;
-  searchProduct(options: QueryLazyOptions<OperationVariables>): void;
+  searchProducts(options: QueryLazyOptions<OperationVariables>): void;
+  products: Product[];
+  productsTotalCount: number;
+  searchFieldOptions: string[];
+  handleResponse(product: Product[], totalCount: number): void;
 }
 
 const ProductsContext = createContext<ProductsContextData>(
@@ -20,47 +23,38 @@ const ProductsContext = createContext<ProductsContextData>(
 const ProductsProvider: React.FC = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
-  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([])
- 
-  const [executeSearch ,{  loading} ] = useLazyQuery(LOAD_PRODUCTS, {
+  const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
+
+  const [executeSearch] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
-     setProducts(response.products.products)
-     setProductsTotalCount(response.products.totalCount)
-      const optionsList  = extractSearchFieldOptions(response.products.products);
-      setSearchFieldOptions(optionsList);
-        
-   
+      handleResponse(response.products.products, response.products.totalCount);
     },
-    onError(error)  {
-      console.log(error)
-    }
+    onError(error) {
+      console.log(error);
+    },
   });
 
-  async function searchProduct(options:  QueryLazyOptions<OperationVariables>) {
+  async function searchProducts(options: QueryLazyOptions<OperationVariables>) {
     executeSearch({
       ...options,
-    })
-  }
-  
- async function getProducts(department: string): Promise<void> {
-    executeSearch({
-      variables: {
-        department, 
-       }
-    })
+    });
   }
 
-  
+  function handleResponse(products, totalCount) {
+    setProducts(products);
+    setProductsTotalCount(totalCount);
+    const optionsList = extractSearchFieldOptions(products);
+    setSearchFieldOptions(optionsList);
+  }
 
   return (
     <ProductsContext.Provider
       value={{
-        isLoading: loading, 
-        getProducts,
+        searchProducts,
         products,
         productsTotalCount,
         searchFieldOptions,
-        searchProduct,
+        handleResponse,
       }}
     >
       {children}

@@ -7,3 +7,11 @@ export const CREATE_FAVORITE = gql`
     }
   }
 `;
+
+export const DELETE_FAVORITE = gql`
+  mutation deleteFavorite($productName: String!) {
+    deleteFavorite(productName: $productName) {
+      product
+    }
+  }
+`;

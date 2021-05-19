@@ -15,9 +15,7 @@ interface FavoriteItemProps {
   products: Product[];
 }
 
-
-
-export default  function FavoriteItem({ products }: FavoriteItemProps) {
+export default function FavoriteItem({ products }: FavoriteItemProps) {
   const { removeFavorite } = useFavorite();
   const [isRemovingFavorite, setIsremovingFavorite] = useState(false);
 

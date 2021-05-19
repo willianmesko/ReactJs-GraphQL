@@ -82,7 +82,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signOut = () => {
     localStorage.clear();
-   
+
     window.location.pathname = '/';
     setData({} as AuthState);
   };
