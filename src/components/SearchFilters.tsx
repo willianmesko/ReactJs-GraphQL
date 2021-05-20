@@ -2,7 +2,7 @@ import { Flex, Button, Select } from '@chakra-ui/react';
 import { Input } from './Form/Input';
 import { QueryLazyOptions, OperationVariables } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { usePersist } from '../hooks/usePersist';
+
 
 interface RouteParams {
   department: string;
@@ -30,8 +30,7 @@ export default function SearchFilters({
   executeSearch,
 }: FilterProps) {
   const { department } = useParams<RouteParams>();
-  const { persitSearchField, persistSearchValue, persistSearchSort } =
-    usePersist();
+ 
 
   return (
     <Flex w="80vw" align="center" justifyContent="space-between">
@@ -44,7 +43,7 @@ export default function SearchFilters({
         isDisabled={!searchField}
         value={searchValue}
         placeholder="Find a favorite"
-        onChange={e => persistSearchValue(e.target.value, setSearchValue)}
+        onChange={e =>  setSearchValue(e.target.value)}
       />
       <Select
         ml="10px"
@@ -52,7 +51,7 @@ export default function SearchFilters({
         mb="10px"
         placeholder="Field"
         value={searchField}
-        onChange={e => persitSearchField(e.target.value, setSearchField)}
+        onChange={e =>  setSearchField(e.target.value)}
       >
         {searchFieldOptions &&
           searchFieldOptions.map((option, index) => (
@@ -68,7 +67,7 @@ export default function SearchFilters({
         w="200px"
         placeholder="Sort"
         value={searchSort}
-        onChange={e => persistSearchSort(e.target.value, setSearchSort)}
+        onChange={e => setSearchSort(e.target.value)}
       >
         <option value="ASC">ASC</option>
         <option value="DESC">DESC</option>

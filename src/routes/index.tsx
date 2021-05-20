@@ -10,6 +10,7 @@ import Products from '../pages/Products';
 import Favorites from '../pages/Favorites';
 
 const Routes: React.FC = () => (
+
   <Switch>
     <Route path="/" exact component={Home} />
     <Route path="/signIn" exact component={SignIn} />
@@ -17,6 +18,7 @@ const Routes: React.FC = () => (
     <Route isPrivate path="/favorites" exact component={Favorites} />
     <Route path="/products/:department" exact component={Products} />
   </Switch>
+
 );
 
 export default Routes;

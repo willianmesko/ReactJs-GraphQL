@@ -21,6 +21,7 @@ const Route: React.FC<RouteProps> = ({
   }
 
   return (
+    
     <ReactDOMRoute
       {...rest}
       render={() => (

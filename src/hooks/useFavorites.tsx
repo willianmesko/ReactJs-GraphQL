@@ -11,6 +11,11 @@ import { CREATE_FAVORITE, DELETE_FAVORITE } from '../GraphQL/favorite.mutation';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
+import createPersistedState from 'use-persisted-state';
+
+const useSearchField = createPersistedState('@favorites/searchField');
+const useSearchValue = createPersistedState('@favorites/searchValue');
+const useSearchSort = createPersistedState('@favorites/searchSort');
 
 interface FavoritesContextData {
   getFavorites(): void;
@@ -38,9 +43,9 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
 
-  const [searchField, setSearchField] = useState<string>('');
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [searchSort, setSearchSort] = useState<string>('');
+  const [searchField, setSearchField] = useSearchField<string>('');
+  const [searchValue, setSearchValue] = useSearchValue<string>('');
+  const [searchSort, setSearchSort] = useSearchSort<string>('');
 
   const [deleteFavorite] = useMutation(DELETE_FAVORITE, {
     onCompleted(response) {

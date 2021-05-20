@@ -7,7 +7,11 @@ import {
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
-import { usePersist } from './usePersist';
+import createPersistedState from 'use-persisted-state';
+
+const useSearchField = createPersistedState('@products/searchField');
+const useSearchValue = createPersistedState('@products/searchValue');
+const useSearchSort = createPersistedState('@products/searchSort');
 
 interface ProductsContextData {
   searchProducts(options: QueryLazyOptions<OperationVariables>): void;
@@ -28,14 +32,15 @@ const ProductsContext = createContext<ProductsContextData>(
 );
 
 const ProductsProvider: React.FC = ({ children }) => {
-  const { persitedField, persistedValue, persistedSort } = usePersist();
+
 
   const [products, setProducts] = useState<Product[]>([]);
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
-  const [searchField, setSearchField] = useState<string>(persitedField);
-  const [searchValue, setSearchValue] = useState<string>(persistedValue);
-  const [searchSort, setSearchSort] = useState<string>(persistedSort);
+  const [searchField, setSearchField] = useSearchField<string>();
+  const [searchValue, setSearchValue] = useSearchValue<string>();
+  const [searchSort, setSearchSort] = useSearchSort<string>();
+
   const [executeSearch] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
       handleResponse(response.products.products, response.products.totalCount);

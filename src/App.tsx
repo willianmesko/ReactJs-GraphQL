@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route  } from 'react-router-dom';
 import {
   ApolloClient,
   InMemoryCache,
@@ -13,6 +13,7 @@ import { theme } from './styles/theme';
 import Routes from './routes';
 import AppProvider from './hooks';
 import 'react-toastify/dist/ReactToastify.css';
+import { QueryParamProvider } from 'use-query-params';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:8080/graphql' });
 
@@ -35,10 +36,12 @@ export function App() {
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
         <Router>
+        <QueryParamProvider ReactRouterRoute={Route}>
           <AppProvider>
             <Routes />
             <ToastContainer />
           </AppProvider>
+          </QueryParamProvider>
         </Router>
       </ChakraProvider>
     </ApolloProvider>
