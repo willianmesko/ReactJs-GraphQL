@@ -6,13 +6,13 @@ import {
   usePaginator,
   PageGroup,
 } from 'chakra-paginator';
-import { QueryLazyOptions, OperationVariables } from '@apollo/client';
 import { normalStyles, activeStyles, separatorStyles } from './styles';
 import { useEffect } from 'react';
+import { SearchOptions } from '../../interfaces/SearchOptions.interface';
 
 interface PaginationProps {
   totalCountOfRegister: number;
-  handlePage(options: QueryLazyOptions<OperationVariables>): void;
+  handlePage(options: SearchOptions): void;
 }
 interface RouteParams {
   department: string;
@@ -26,7 +26,7 @@ export default function Pagination({
   const innerLimit = 2;
 
   const [page, setPage] = useQueryParam('page', NumberParam);
-  console.log(page);
+
   const { department } = useParams<RouteParams>();
   const { isDisabled, pagesQuantity, currentPage, setCurrentPage } =
     usePaginator({
@@ -35,22 +35,18 @@ export default function Pagination({
         pageSize: 3,
         currentPage: 1,
         isDisabled: false,
+        
       },
     });
 
   useEffect(() => {
     setCurrentPage(Number(page));
-    handlePage({
-      variables: {
-        page,
-        department,
-      },
-    });
-  }, [page, department, setCurrentPage]);
+  }, [setCurrentPage, page]);
 
   const handlePageChange = (nextPage: number) => {
     setCurrentPage(nextPage);
     setPage(nextPage);
+    handlePage({page:nextPage, department});
   };
 
   return (

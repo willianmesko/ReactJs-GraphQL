@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useQueryParam, NumberParam } from 'use-query-params';
 import { Flex, SimpleGrid, Text, Skeleton } from '@chakra-ui/react';
 import SearchFilters from '../../components/SearchFilters';
 import ProductItem from '../../components/ProductItem';
@@ -30,12 +31,11 @@ export default function Products() {
     setSearchSort,
   } = useProducts();
 
+  const [page] = useQueryParam('page', NumberParam);
   const { loading } = useQuery(LOAD_PRODUCTS, {
     variables: {
       department,
-      field: `product.${searchField}`,
-      value: searchValue,
-      sort: searchSort,
+      page
     },
     onCompleted(response) {
       handleResponse(response.products.products, response.products.totalCount);
@@ -92,6 +92,7 @@ export default function Products() {
             </SimpleGrid>
 
             <Pagination
+             
               totalCountOfRegister={productsTotalCount}
               handlePage={searchProducts}
             />

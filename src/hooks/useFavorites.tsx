@@ -1,9 +1,7 @@
 import {
-  QueryLazyOptions,
   useLazyQuery,
   useQuery,
   useMutation,
-  OperationVariables,
 } from '@apollo/client';
 import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
@@ -12,16 +10,17 @@ import { Product } from '../interfaces/Product.interface';
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
 import createPersistedState from 'use-persisted-state';
+import { SearchOptions } from '../interfaces/SearchOptions.interface';
 
 const useSearchField = createPersistedState('@favorites/searchField');
 const useSearchValue = createPersistedState('@favorites/searchValue');
 const useSearchSort = createPersistedState('@favorites/searchSort');
 
 interface FavoritesContextData {
-  getFavorites(): void;
+
   addFavorite(product: Product): void;
   removeFavorite(product: Product): void;
-  searchFavorite(options: QueryLazyOptions<OperationVariables>): void;
+  searchFavorite(options:SearchOptions): void;
   favorites: Product[];
   favoritesTotalCount: number;
   searchFieldOptions: string[];
@@ -43,9 +42,26 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
 
-  const [searchField, setSearchField] = useSearchField<string>('');
-  const [searchValue, setSearchValue] = useSearchValue<string>('');
-  const [searchSort, setSearchSort] = useSearchSort<string>('');
+  const [searchField, setSearchField] = useSearchField<string>(() => {
+    const field =  localStorage.getItem('@products/searchField');
+    if (field) {
+      return JSON.parse(field);
+    }
+    return ''
+  });
+  const [searchValue, setSearchValue] = useSearchValue<string>(() => {
+    const value =  localStorage.getItem('@products/searchValue');
+    if (value) {
+      return JSON.parse(value);
+    }
+    return ''
+  });
+  const [searchSort, setSearchSort] = useSearchSort<string>(() => {
+    const sort =  localStorage.getItem('@products/searchSort');
+    if (sort) {
+      return JSON.parse(sort);
+    }
+    return ''});
 
   const [deleteFavorite] = useMutation(DELETE_FAVORITE, {
     onCompleted(response) {
@@ -60,15 +76,7 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [createFavorite] = useMutation(CREATE_FAVORITE, {
     onCompleted(response) {
       toast.success('Favorite saved.');
-
-      setSearchFieldOptions(
-        Object.keys(response.createFavorite.product).filter(
-          fav =>
-            !searchFieldOptions.includes(fav) &&
-            fav !== 'imageUrl' && [...searchFieldOptions, fav],
-        ),
-      );
-
+      setSearchFieldOptions(extractSearchFieldOptions(favorites.concat([response.createFavorite.product])));
       setFavorites([...favorites, response.createFavorite.product]);
       setFavoritesTotalCount(response.createFavorite.product.length);
     },
@@ -78,11 +86,8 @@ const FavoritesProvider: React.FC = ({ children }) => {
     },
   });
 
-  const { loading } = useQuery(LOAD_FAVORITES, {
-    variables: {
-      page: 1,
-      take: 3,
-    },
+  const { loading } = useQuery(LOAD_FAVORITES,{
+    
     onCompleted(response) {
       handleResponse(
         response.favorites.favorites,
@@ -103,8 +108,7 @@ const FavoritesProvider: React.FC = ({ children }) => {
   function handleResponse(products, totalCount): void {
     setFavorites(products);
     setFavoritesTotalCount(totalCount);
-    const optionsList = extractSearchFieldOptions(products);
-    setSearchFieldOptions(optionsList);
+    setSearchFieldOptions(extractSearchFieldOptions(products));
   }
 
   function removeFavorite(product: Product): void {
@@ -123,23 +127,23 @@ const FavoritesProvider: React.FC = ({ children }) => {
     });
   }
 
-  function searchFavorite(options: QueryLazyOptions<OperationVariables>) {
-    executeSearch({ ...options });
-  }
-
-  function getFavorites(): void {
+  function searchFavorite(options: SearchOptions) {
     executeSearch({
       variables: {
-        page: 1,
-        take: 3,
-      },
+        ...options,
+        value: searchValue,
+        field: `product.${searchField}`,
+        sort: searchSort
+      }
     });
   }
+
+
 
   return (
     <FavoritesContext.Provider
       value={{
-        getFavorites,
+      
         addFavorite,
         removeFavorite,
         favorites,

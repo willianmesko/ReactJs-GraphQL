@@ -1,20 +1,22 @@
 import React, { createContext, useState, useContext } from 'react';
 import {
-  OperationVariables,
-  QueryLazyOptions,
   useLazyQuery,
 } from '@apollo/client';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
 import createPersistedState from 'use-persisted-state';
+import { SearchOptions } from '../interfaces/SearchOptions.interface';
 
 const useSearchField = createPersistedState('@products/searchField');
 const useSearchValue = createPersistedState('@products/searchValue');
 const useSearchSort = createPersistedState('@products/searchSort');
 
+
+
+
 interface ProductsContextData {
-  searchProducts(options: QueryLazyOptions<OperationVariables>): void;
+  searchProducts(options: SearchOptions): void;
   products: Product[];
   productsTotalCount: number;
   searchFieldOptions: string[];
@@ -25,6 +27,7 @@ interface ProductsContextData {
   setSearchValue(value: string): void;
   searchSort: string;
   setSearchSort(sort: string): void;
+  isLoading: boolean;
 }
 
 const ProductsContext = createContext<ProductsContextData>(
@@ -37,11 +40,29 @@ const ProductsProvider: React.FC = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
-  const [searchField, setSearchField] = useSearchField<string>();
-  const [searchValue, setSearchValue] = useSearchValue<string>();
-  const [searchSort, setSearchSort] = useSearchSort<string>();
+  const [searchField, setSearchField] = useSearchField<string>(() => {
+    const field =  localStorage.getItem('@products/searchField');
+    if (field) {
+      return JSON.parse(field);
+    }
+    return ''
+  });
+  const [searchValue, setSearchValue] = useSearchValue<string>(() => {
+    const value =  localStorage.getItem('@products/searchValue');
+    if (value) {
+      return JSON.parse(value);
+    }
+    return ''
+  });
+  const [searchSort, setSearchSort] = useSearchSort<string>(() => {
+    const sort =  localStorage.getItem('@products/searchSort');
+    if (sort) {
+      return JSON.parse(sort);
+    }
+    return ''});
+    
 
-  const [executeSearch] = useLazyQuery(LOAD_PRODUCTS, {
+  const [executeSearch, {loading}] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
       handleResponse(response.products.products, response.products.totalCount);
     },
@@ -50,9 +71,15 @@ const ProductsProvider: React.FC = ({ children }) => {
     },
   });
 
-  function searchProducts(options: QueryLazyOptions<OperationVariables>) {
+  function searchProducts(options:SearchOptions) {
+  
     executeSearch({
-      ...options,
+      variables: {
+        ...options,
+        value: searchValue,
+        field: `product.${searchField}`,
+        sort: searchSort
+      }
     });
   }
 
@@ -77,6 +104,7 @@ const ProductsProvider: React.FC = ({ children }) => {
         setSearchValue,
         searchSort,
         setSearchSort,
+        isLoading: loading,
       }}
     >
       {children}
