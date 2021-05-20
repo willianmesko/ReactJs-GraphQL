@@ -42,26 +42,9 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
 
-  const [searchField, setSearchField] = useSearchField<string>(() => {
-    const field =  localStorage.getItem('@products/searchField');
-    if (field) {
-      return JSON.parse(field);
-    }
-    return ''
-  });
-  const [searchValue, setSearchValue] = useSearchValue<string>(() => {
-    const value =  localStorage.getItem('@products/searchValue');
-    if (value) {
-      return JSON.parse(value);
-    }
-    return ''
-  });
-  const [searchSort, setSearchSort] = useSearchSort<string>(() => {
-    const sort =  localStorage.getItem('@products/searchSort');
-    if (sort) {
-      return JSON.parse(sort);
-    }
-    return ''});
+  const [searchField, setSearchField] = useSearchField<string>('');
+  const [searchValue, setSearchValue] = useSearchValue<string>('');
+  const [searchSort, setSearchSort] = useSearchSort<string>('');
 
   const [deleteFavorite] = useMutation(DELETE_FAVORITE, {
     onCompleted(response) {
@@ -133,7 +116,8 @@ const FavoritesProvider: React.FC = ({ children }) => {
         ...options,
         value: searchValue,
         field: `product.${searchField}`,
-        sort: searchSort
+        sort: searchSort,
+       
       }
     });
   }
