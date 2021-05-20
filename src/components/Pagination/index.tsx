@@ -18,7 +18,6 @@ interface RouteParams {
   department: string;
 }
 
-
 export default function Pagination({
   totalCountOfRegister,
   handlePage,
@@ -27,7 +26,7 @@ export default function Pagination({
   const innerLimit = 2;
 
   const [page, setPage] = useQueryParam('page', NumberParam);
-  console.log(page)
+  console.log(page);
   const { department } = useParams<RouteParams>();
   const { isDisabled, pagesQuantity, currentPage, setCurrentPage } =
     usePaginator({
@@ -39,22 +38,19 @@ export default function Pagination({
       },
     });
 
-
-    useEffect(() => {
-    setCurrentPage(Number(page))
+  useEffect(() => {
+    setCurrentPage(Number(page));
     handlePage({
       variables: {
         page,
         department,
       },
     });
-    },[page, department, setCurrentPage ])
- 
-
+  }, [page, department, setCurrentPage]);
 
   const handlePageChange = (nextPage: number) => {
     setCurrentPage(nextPage);
-    setPage(nextPage)
+    setPage(nextPage);
   };
 
   return (
