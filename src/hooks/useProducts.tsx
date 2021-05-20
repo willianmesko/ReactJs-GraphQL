@@ -13,8 +13,6 @@ const useSearchValue = createPersistedState('@products/searchValue');
 const useSearchSort = createPersistedState('@products/searchSort');
 
 
-
-
 interface ProductsContextData {
   searchProducts(options: SearchOptions): void;
   products: Product[];
@@ -35,8 +33,6 @@ const ProductsContext = createContext<ProductsContextData>(
 );
 
 const ProductsProvider: React.FC = ({ children }) => {
-
-
   const [products, setProducts] = useState<Product[]>([]);
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
@@ -45,7 +41,6 @@ const ProductsProvider: React.FC = ({ children }) => {
   const [searchValue, setSearchValue] = useSearchValue<string>('');
   const [searchSort, setSearchSort] = useSearchSort<string>('');
     
-
   const [executeSearch, {loading}] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
       handleResponse(response.products.products, response.products.totalCount);
@@ -55,8 +50,7 @@ const ProductsProvider: React.FC = ({ children }) => {
     },
   });
 
-  function searchProducts(options:SearchOptions) {
-  
+  function searchProducts(options: SearchOptions) {
     executeSearch({
       variables: {
         ...options,

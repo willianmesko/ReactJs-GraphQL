@@ -45,7 +45,6 @@ export default function Products() {
   return (
     <>
       <Header />
-
       {loading ? (
         <Flex w="100vw" mt="10" align="center" justify="center">
           {Array(3).map((_, index) => (
@@ -90,9 +89,7 @@ export default function Products() {
                 </Flex>
               )}
             </SimpleGrid>
-
             <Pagination
-             
               totalCountOfRegister={productsTotalCount}
               handlePage={searchProducts}
             />

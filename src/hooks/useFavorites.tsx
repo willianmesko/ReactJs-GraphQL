@@ -70,7 +70,6 @@ const FavoritesProvider: React.FC = ({ children }) => {
   });
 
   const { loading } = useQuery(LOAD_FAVORITES,{
-    
     onCompleted(response) {
       handleResponse(
         response.favorites.favorites,
@@ -122,12 +121,9 @@ const FavoritesProvider: React.FC = ({ children }) => {
     });
   }
 
-
-
   return (
     <FavoritesContext.Provider
-      value={{
-      
+      value={{      
         addFavorite,
         removeFavorite,
         favorites,

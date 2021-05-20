@@ -2,19 +2,20 @@ import { Flex, Box, Text, Image, Stack, Button } from '@chakra-ui/react';
 import { Product } from '../interfaces/Product.interface';
 import { useFavorite } from '../hooks/useFavorites';
 import moneyFormat from '../utils/moneyFormat';
+
 interface FavoriteItemProps {
-  products: Product[];
+  favorites: Product[];
 }
 
-export default function FavoriteItem({ products }: FavoriteItemProps) {
+export default function FavoriteItem({ favorites }: FavoriteItemProps) {
   const { removeFavorite } = useFavorite();
 
   return (
     <Stack>
-      {products ? (
-        products.map(product => (
+      {favorites ? (
+        favorites.map(favorite => (
           <Flex
-            key={product.id}
+            key={favorite.id}
             h="200px"
             w="900px"
             borderBottom="1px solid gray"
@@ -23,13 +24,13 @@ export default function FavoriteItem({ products }: FavoriteItemProps) {
             bg="with"
             color="white"
           >
-            <Image mr="5" src={product.imageUrl} w="25%" />
+            <Image mr="5" src={favorite.imageUrl} w="25%" />
             <Box width="70%">
               <Text fontSize="2xl" letterSpacing="tight" color="gray.400">
-                {product.name}
+                {favorite.name}
               </Text>
               <Text fontSize="20" mt="2" letterSpacing="tight" color="black">
-                {moneyFormat.format(product.price)}
+                {moneyFormat.format(favorite.price)}
               </Text>
             </Box>
             <Flex flexDir="column">
@@ -39,7 +40,7 @@ export default function FavoriteItem({ products }: FavoriteItemProps) {
 
               <Text
                 mt="2"
-                onClick={() => removeFavorite(product)}
+                onClick={() => removeFavorite(favorite)}
                 _hover={{
                   cursor: 'pointer',
                   color: 'black',

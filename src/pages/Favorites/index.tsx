@@ -23,7 +23,6 @@ export default function Favorites() {
   return (
     <>
       <Header />
-
       <Flex w="100vw" align="center" justify="center" mt="5" flexDir="column">
         <SearchFilters
           searchField={searchField}
@@ -53,7 +52,7 @@ export default function Favorites() {
           <h1>No favorite found</h1>
         ) : (
           <>
-            <FavoriteItem products={favorites} />
+            <FavoriteItem favorites={favorites} />
           </>
         )}
         <Pagination
