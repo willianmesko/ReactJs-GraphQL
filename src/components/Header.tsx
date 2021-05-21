@@ -1,10 +1,9 @@
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useLocation, NavLink  } from 'react-router-dom';
 import {
   Flex,
   Text,
   ButtonGroup,
   Button,
-  ListItem,
   UnorderedList,
 } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
@@ -88,29 +87,16 @@ export default function Header() {
           fontWeight="bold"
           display="flex"
           listStyleType="none"
+         
         >
-          <ListItem
-            onClick={() => history.push('/')}
-            _hover={{
-              color: '#000',
-              cursor: 'pointer',
-            }}
-            color={location.pathname === '/' ? '#000' : 'white'}
-            mr="5"
-          >
+          <NavLink  exact to="/" activeStyle={{color:"pink"}} >
             Departments
-          </ListItem>
+          </NavLink >
           {user && (
-            <ListItem
-              onClick={() => history.push('/favorites')}
-              _hover={{
-                color: '#000',
-                cursor: 'pointer',
-              }}
-              color={location.pathname === '/favorites' ? '#000' : 'white'}
-            >
+            <NavLink 
+              to="/favorites" activeStyle={{color:"pink"}}>
               My Favorites
-            </ListItem>
+            </NavLink >
           )}
         </UnorderedList>
       </Flex>
