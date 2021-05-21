@@ -86,7 +86,6 @@ export default function Header() {
           fontWeight="bold"
           display="flex"
           listStyleType="none"
-         
         >
           <NavLink  exact to="/" activeStyle={{color:"pink"}} >
             Departments
