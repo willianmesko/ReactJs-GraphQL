@@ -1,4 +1,4 @@
-import { useHistory, useLocation, NavLink  } from 'react-router-dom';
+import { useHistory, NavLink  } from 'react-router-dom';
 import {
   Flex,
   Text,
