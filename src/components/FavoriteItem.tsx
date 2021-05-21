@@ -34,7 +34,7 @@ export default function FavoriteItem({ favorites }: FavoriteItemProps) {
               </Text>
             </Box>
             <Flex flexDir="column">
-              <Button w="200px" bg="blue.400">
+              <Button w="200px" bg="pink.400">
                 Buy
               </Button>
 
