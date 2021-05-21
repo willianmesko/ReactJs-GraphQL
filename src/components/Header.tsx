@@ -10,7 +10,6 @@ import { useAuth } from '../hooks/useAuth';
 
 export default function Header() {
   const history = useHistory();
-  const location = useLocation();
   const { user, signOut } = useAuth();
 
   return (
