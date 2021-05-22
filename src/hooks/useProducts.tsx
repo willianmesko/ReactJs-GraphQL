@@ -29,7 +29,6 @@ const ProductsProvider: React.FC = ({ children }) => {
     
   const [executeSearch, {loading}] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
-      console.log(response)
       handleResponse(response.products.products, response.products.totalCount);
     },
     onError(error) {
