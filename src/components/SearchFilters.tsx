@@ -2,6 +2,7 @@ import { Flex, Button, Select } from '@chakra-ui/react';
 import { Input } from './Form/Input';
 import { useParams } from 'react-router-dom';
 import { SearchOptions } from '../interfaces/SearchOptions.interface';
+import { useState } from 'react';
 
 interface RouteParams {
   department: string;
@@ -9,27 +10,19 @@ interface RouteParams {
 
 
 interface FilterProps {
-  searchField: string;
-  setSearchField(field: string): void;
-  setSearchValue(value: string): void;
-  searchValue: string;
   searchFieldOptions: string[];
-  searchSort: string;
-  setSearchSort(sort: string);
   executeSearch(options:SearchOptions): void;
 }
 
 export default function SearchFilters({
-  searchField,
-  setSearchField,
-  setSearchValue,
-  searchValue,
   searchFieldOptions,
-  searchSort,
-  setSearchSort,
   executeSearch,
 }: FilterProps) {
   const { department } = useParams<RouteParams>();
+
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [searchField, setSearchField] = useState<string>('')
+  const [searchSort, setSearchSort] = useState<string>('')
 
   return (
     <Flex w="80vw" align="center" justifyContent="space-between">
@@ -82,7 +75,6 @@ export default function SearchFilters({
               field: `product.${searchField}`,
               value: searchValue,
               page:1,
-           
           })
         }
       >

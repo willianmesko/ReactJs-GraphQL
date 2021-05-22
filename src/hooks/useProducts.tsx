@@ -5,13 +5,7 @@ import {
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
-import createPersistedState from 'use-persisted-state';
 import { SearchOptions } from '../interfaces/SearchOptions.interface';
-
-const useSearchField = createPersistedState('@products/searchField');
-const useSearchValue = createPersistedState('@products/searchValue');
-const useSearchSort = createPersistedState('@products/searchSort');
-
 
 interface ProductsContextData {
   searchProducts(options: SearchOptions): void;
@@ -19,12 +13,6 @@ interface ProductsContextData {
   productsTotalCount: number;
   searchFieldOptions: string[];
   handleResponse(product: Product[], totalCount: number): void;
-  searchField: string;
-  setSearchField(field: string): void;
-  searchValue: string;
-  setSearchValue(value: string): void;
-  searchSort: string;
-  setSearchSort(sort: string): void;
   isLoading: boolean;
 }
 
@@ -37,12 +25,11 @@ const ProductsProvider: React.FC = ({ children }) => {
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
   
-  const [searchField, setSearchField] = useSearchField<string>('');
-  const [searchValue, setSearchValue] = useSearchValue<string>('');
-  const [searchSort, setSearchSort] = useSearchSort<string>('');
+
     
   const [executeSearch, {loading}] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
+      console.log(response)
       handleResponse(response.products.products, response.products.totalCount);
     },
     onError(error) {
@@ -50,13 +37,10 @@ const ProductsProvider: React.FC = ({ children }) => {
     },
   });
 
-  function searchProducts(options: SearchOptions) {
+  function searchProducts(options: SearchOptions) { 
     executeSearch({
       variables: {
         ...options,
-        value: searchValue,
-        field: `product.${searchField}`,
-        sort: searchSort
       }
     });
   }
@@ -76,12 +60,6 @@ const ProductsProvider: React.FC = ({ children }) => {
         productsTotalCount,
         searchFieldOptions,
         handleResponse,
-        searchField,
-        setSearchField,
-        searchValue,
-        setSearchValue,
-        searchSort,
-        setSearchSort,
         isLoading: loading,
       }}
     >

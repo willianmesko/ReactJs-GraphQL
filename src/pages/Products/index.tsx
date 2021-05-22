@@ -14,7 +14,7 @@ interface RouteParams {
   department: string;
 }
 
-export default function Products() {
+const Products= () => {
   const { department } = useParams<RouteParams>();
 
   const {
@@ -23,12 +23,6 @@ export default function Products() {
     productsTotalCount,
     searchFieldOptions,
     handleResponse,
-    searchField,
-    setSearchField,
-    searchValue,
-    setSearchValue,
-    searchSort,
-    setSearchSort,
   } = useProducts();
 
   const [page] = useQueryParam('page', NumberParam);
@@ -68,13 +62,7 @@ export default function Products() {
             flexDirection="column"
           >
             <SearchFilters
-              searchField={searchField}
-              setSearchField={setSearchField}
               searchFieldOptions={searchFieldOptions}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              searchSort={searchSort}
-              setSearchSort={setSearchSort}
               executeSearch={searchProducts}
             />
 
@@ -99,3 +87,4 @@ export default function Products() {
     </>
   );
 }
+export default Products;

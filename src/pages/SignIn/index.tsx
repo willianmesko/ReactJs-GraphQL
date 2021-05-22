@@ -16,7 +16,7 @@ const signInFormSchema = yup.object().shape({
   password: yup.string().required(),
 });
 
-export default function SignIn() {
+const SignIn = () => {
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema),
   });
@@ -101,3 +101,4 @@ export default function SignIn() {
     </Flex>
   );
 }
+export default SignIn;

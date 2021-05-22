@@ -4,7 +4,7 @@ import DepartmentBlock from '../../components/DepartmentBlock';
 import TelevisionImage from '../../assets/acessories.webp';
 import GamesImage from '../../assets/ps5.jpeg';
 
-export default function Home() {
+const Home = () => {
   return (
     <>
       <Header />
@@ -17,3 +17,4 @@ export default function Home() {
     </>
   );
 }
+export default Home;

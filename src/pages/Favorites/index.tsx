@@ -5,19 +5,13 @@ import FavoriteItem from '../../components/FavoriteItem';
 import { useFavorite } from '../../hooks/useFavorites';
 import SearchFilters from '../../components/SearchFilters';
 
-export default function Favorites() {
+const Favorites = () => {
   const {
     favorites,
     favoritesTotalCount,
     searchFieldOptions,
     searchFavorite,
     isLoading,
-    searchField,
-    setSearchField,
-    searchValue,
-    setSearchValue,
-    searchSort,
-    setSearchSort,
   } = useFavorite();
 
   return (
@@ -25,13 +19,7 @@ export default function Favorites() {
       <Header />
       <Flex w="100vw" align="center" justify="center" mt="5" flexDir="column">
         <SearchFilters
-          searchField={searchField}
-          setSearchField={setSearchField}
           searchFieldOptions={searchFieldOptions}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          searchSort={searchSort}
-          setSearchSort={setSearchSort}
           executeSearch={searchFavorite}
         />
         {isLoading && (
@@ -63,3 +51,5 @@ export default function Favorites() {
     </>
   );
 }
+
+export default Favorites;

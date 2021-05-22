@@ -9,12 +9,7 @@ import { CREATE_FAVORITE, DELETE_FAVORITE } from '../GraphQL/favorite.mutation';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
-import createPersistedState from 'use-persisted-state';
 import { SearchOptions } from '../interfaces/SearchOptions.interface';
-
-const useSearchField = createPersistedState('@favorites/searchField');
-const useSearchValue = createPersistedState('@favorites/searchValue');
-const useSearchSort = createPersistedState('@favorites/searchSort');
 
 interface FavoritesContextData {
 
@@ -25,12 +20,6 @@ interface FavoritesContextData {
   favoritesTotalCount: number;
   searchFieldOptions: string[];
   isLoading: boolean;
-  searchField: string;
-  setSearchField(field: string): void;
-  searchValue: string;
-  setSearchValue(value: string): void;
-  searchSort: string;
-  setSearchSort(sort: string): void;
 }
 
 const FavoritesContext = createContext<FavoritesContextData>(
@@ -41,10 +30,6 @@ const FavoritesProvider: React.FC = ({ children }) => {
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [favoritesTotalCount, setFavoritesTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
-
-  const [searchField, setSearchField] = useSearchField<string>('');
-  const [searchValue, setSearchValue] = useSearchValue<string>('');
-  const [searchSort, setSearchSort] = useSearchSort<string>('');
 
   const [deleteFavorite] = useMutation(DELETE_FAVORITE, {
     onCompleted(response) {
@@ -113,10 +98,6 @@ const FavoritesProvider: React.FC = ({ children }) => {
     executeSearch({
       variables: {
         ...options,
-        value: searchValue,
-        field: `product.${searchField}`,
-        sort: searchSort,
-       
       }
     });
   }
@@ -131,12 +112,6 @@ const FavoritesProvider: React.FC = ({ children }) => {
         searchFieldOptions,
         searchFavorite,
         isLoading: loading,
-        searchField,
-        setSearchField,
-        searchValue,
-        setSearchValue,
-        searchSort,
-        setSearchSort,
       }}
     >
       {children}
