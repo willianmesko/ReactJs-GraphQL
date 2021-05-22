@@ -8,7 +8,6 @@ interface RouteParams {
   department: string;
 }
 
-
 interface FilterProps {
   searchFieldOptions: string[];
   executeSearch(options:SearchOptions): void;
