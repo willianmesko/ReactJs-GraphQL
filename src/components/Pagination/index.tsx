@@ -8,11 +8,14 @@ import {
 } from 'chakra-paginator';
 import { normalStyles, activeStyles, separatorStyles } from './styles';
 import { useEffect } from 'react';
-import { SearchOptions } from '../../interfaces/SearchOptions.interface';
+import {
+  OperationVariables,
+  QueryLazyOptions
+} from '@apollo/client';
 
 interface PaginationProps {
   totalCountOfRegister: number;
-  handlePage(options: SearchOptions): void;
+  handlePage(options: QueryLazyOptions<OperationVariables>): void;
 }
 interface RouteParams {
   department: string;
@@ -46,7 +49,14 @@ export default function Pagination({
   const handlePageChange = (nextPage: number) => {
     setCurrentPage(nextPage);
     setPage(nextPage);
-    handlePage({page:nextPage, department});
+    handlePage(
+      {
+        variables: {
+          department,
+          page: nextPage
+        }
+      }
+    );
   };
 
   return (

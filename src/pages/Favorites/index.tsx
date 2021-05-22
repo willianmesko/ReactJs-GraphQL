@@ -10,7 +10,7 @@ const Favorites = () => {
     favorites,
     favoritesTotalCount,
     searchFieldOptions,
-    searchFavorite,
+    executeSearch,
     isLoading,
   } = useFavorite();
 
@@ -20,7 +20,7 @@ const Favorites = () => {
       <Flex w="100vw" align="center" justify="center" mt="5" flexDir="column">
         <SearchFilters
           searchFieldOptions={searchFieldOptions}
-          executeSearch={searchFavorite}
+          executeSearch={executeSearch}
         />
         {isLoading && (
           <Stack>
@@ -44,7 +44,7 @@ const Favorites = () => {
           </>
         )}
         <Pagination
-          handlePage={searchFavorite}
+          handlePage={executeSearch}
           totalCountOfRegister={favoritesTotalCount}
         />
       </Flex>

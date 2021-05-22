@@ -2,6 +2,9 @@ import {
   useLazyQuery,
   useQuery,
   useMutation,
+  MutationFunctionOptions,
+  OperationVariables,
+  QueryLazyOptions
 } from '@apollo/client';
 import { toast } from 'react-toastify';
 import React, { createContext, useState, useContext } from 'react';
@@ -9,13 +12,11 @@ import { CREATE_FAVORITE, DELETE_FAVORITE } from '../GraphQL/favorite.mutation';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_FAVORITES } from '../GraphQL/favorite.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
-import { SearchOptions } from '../interfaces/SearchOptions.interface';
 
 interface FavoritesContextData {
-
-  addFavorite(product: Product): void;
-  removeFavorite(product: Product): void;
-  searchFavorite(options:SearchOptions): void;
+  createFavorite(createFavoriteDTO: MutationFunctionOptions<OperationVariables>): void;
+  deleteFavorite(deleteFavoriteDTO : MutationFunctionOptions<OperationVariables>): void;
+  executeSearch(args: QueryLazyOptions<OperationVariables>): void;
   favorites: Product[];
   favoritesTotalCount: number;
   searchFieldOptions: string[];
@@ -46,7 +47,7 @@ const FavoritesProvider: React.FC = ({ children }) => {
       toast.success('Favorite saved.');
       setSearchFieldOptions(extractSearchFieldOptions(favorites.concat([response.createFavorite.product])));
       setFavorites([...favorites, response.createFavorite.product]);
-      setFavoritesTotalCount(response.createFavorite.product.length);
+      setFavoritesTotalCount((favoritesTotalCount) => favoritesTotalCount + 1);
     },
     onError(error) {
       toast.error('Fail.');
@@ -78,39 +79,15 @@ const FavoritesProvider: React.FC = ({ children }) => {
     setSearchFieldOptions(extractSearchFieldOptions(products));
   }
 
-  function removeFavorite(product: Product): void {
-    deleteFavorite({
-      variables: {
-        productName: product.name,
-      },
-    });
-  }
-
-  function addFavorite(product: Product): void {
-    createFavorite({
-      variables: {
-        data: { product },
-      },
-    });
-  }
-
-  function searchFavorite(options: SearchOptions) {
-    executeSearch({
-      variables: {
-        ...options,
-      }
-    });
-  }
-
   return (
     <FavoritesContext.Provider
       value={{      
-        addFavorite,
-        removeFavorite,
+        createFavorite,
+        deleteFavorite,
+        executeSearch,
         favorites,
         favoritesTotalCount,
         searchFieldOptions,
-        searchFavorite,
         isLoading: loading,
       }}
     >

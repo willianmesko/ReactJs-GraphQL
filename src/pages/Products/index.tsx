@@ -18,7 +18,7 @@ const Products= () => {
   const { department } = useParams<RouteParams>();
 
   const {
-    searchProducts,
+    executeSearch,
     products,
     productsTotalCount,
     searchFieldOptions,
@@ -63,7 +63,7 @@ const Products= () => {
           >
             <SearchFilters
               searchFieldOptions={searchFieldOptions}
-              executeSearch={searchProducts}
+              executeSearch={executeSearch}
             />
 
             <SimpleGrid columns={3} spacing={20}>
@@ -79,7 +79,7 @@ const Products= () => {
             </SimpleGrid>
             <Pagination
               totalCountOfRegister={productsTotalCount}
-              handlePage={searchProducts}
+              handlePage={executeSearch}
             />
           </Flex>
         </Flex>

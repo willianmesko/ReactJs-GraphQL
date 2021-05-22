@@ -14,7 +14,7 @@ export interface ProductItemProps {
 
 export default function ProductItem({ product }: ProductItemProps) {
   const { user } = useAuth();
-  const { favorites, addFavorite, removeFavorite } = useFavorite();
+  const { favorites, createFavorite, deleteFavorite } = useFavorite();
   const history = useHistory();
   return (
     <Box
@@ -40,13 +40,23 @@ export default function ProductItem({ product }: ProductItemProps) {
           {checkProductIsFavorite(favorites, product) ? (
             <MdFavorite
               onClick={() =>
-                user ? removeFavorite(product) : history.push('/signIn')
+                user ? deleteFavorite({
+                  variables: { 
+                     productName: product.name
+                  }
+                }) : history.push('/signIn')
               }
             />
           ) : (
             <MdFavoriteBorder
               onClick={() =>
-                user ? addFavorite(product) : history.push('/signIn')
+                user ? createFavorite({
+                  variables: {
+                    data: {
+                       product
+                    }
+                  }
+                }) : history.push('/signIn')
               }
             />
           )}

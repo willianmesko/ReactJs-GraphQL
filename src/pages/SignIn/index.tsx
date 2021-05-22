@@ -90,7 +90,7 @@ const SignIn = () => {
         <Center mt="5">
           <Text
             _hover={{ cursor: 'pointer' }}
-            onClick={() => history.push('signup')}
+             onClick={() => history.push('signup')}
             fontSize="20"
             fontWeight="bold"
           >

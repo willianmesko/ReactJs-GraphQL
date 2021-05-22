@@ -1,8 +1,11 @@
 import { Flex, Button, Select } from '@chakra-ui/react';
 import { Input } from './Form/Input';
 import { useParams } from 'react-router-dom';
-import { SearchOptions } from '../interfaces/SearchOptions.interface';
 import { useState } from 'react';
+import {
+  OperationVariables,
+  QueryLazyOptions
+} from '@apollo/client';
 
 interface RouteParams {
   department: string;
@@ -10,7 +13,7 @@ interface RouteParams {
 
 interface FilterProps {
   searchFieldOptions: string[];
-  executeSearch(options:SearchOptions): void;
+  executeSearch(options:QueryLazyOptions<OperationVariables>): void;
 }
 
 export default function SearchFilters({
@@ -70,10 +73,12 @@ export default function SearchFilters({
         width="100px"
         onClick={() =>
           executeSearch({
-              department,
-              field: `product.${searchField}`,
-              value: searchValue,
-              page:1,
+              variables: {
+                department,
+                field: `product.${searchField}`,
+                value: searchValue,
+                page:1,
+              }
           })
         }
       >

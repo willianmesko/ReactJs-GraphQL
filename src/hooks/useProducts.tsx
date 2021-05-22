@@ -1,14 +1,15 @@
 import React, { createContext, useState, useContext } from 'react';
 import {
   useLazyQuery,
+  QueryLazyOptions,
+  OperationVariables
 } from '@apollo/client';
 import { Product } from '../interfaces/Product.interface';
 import { LOAD_PRODUCTS } from '../GraphQL/product.queries';
 import extractSearchFieldOptions from '../utils/extractSearchFieldOptions';
-import { SearchOptions } from '../interfaces/SearchOptions.interface';
 
 interface ProductsContextData {
-  searchProducts(options: SearchOptions): void;
+  executeSearch(options: QueryLazyOptions<OperationVariables>): void;
   products: Product[];
   productsTotalCount: number;
   searchFieldOptions: string[];
@@ -25,8 +26,6 @@ const ProductsProvider: React.FC = ({ children }) => {
   const [productsTotalCount, setProductsTotalCount] = useState<number>(0);
   const [searchFieldOptions, setSearchFieldOptions] = useState<string[]>([]);
   
-
-    
   const [executeSearch, {loading}] = useLazyQuery(LOAD_PRODUCTS, {
     onCompleted(response) {
       handleResponse(response.products.products, response.products.totalCount);
@@ -35,14 +34,6 @@ const ProductsProvider: React.FC = ({ children }) => {
       console.log(error);
     },
   });
-
-  function searchProducts(options: SearchOptions) { 
-    executeSearch({
-      variables: {
-        ...options,
-      }
-    });
-  }
 
   function handleResponse(products, totalCount) {
     setProducts(products);
@@ -54,7 +45,7 @@ const ProductsProvider: React.FC = ({ children }) => {
   return (
     <ProductsContext.Provider
       value={{
-        searchProducts,
+        executeSearch,
         products,
         productsTotalCount,
         searchFieldOptions,
