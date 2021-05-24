@@ -2,7 +2,6 @@ import { Flex, Box, Text, Image, Stack, Button } from '@chakra-ui/react';
 import { Product } from '../interfaces/Product.interface';
 import { useFavorite } from '../hooks/useFavorites';
 import moneyFormat from '../utils/moneyFormat';
-import Products from '../pages/Products';
 
 interface FavoriteItemProps {
   favorites: Product[];

@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, concat} from '@apollo/client';
 
-const httpLink = new HttpLink({ uri: process.env.REACT_APP_GRAPHQL_URL});
+const httpLink = new HttpLink({ uri: 'http://18.228.206.153:3333/graphql'});
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext({
